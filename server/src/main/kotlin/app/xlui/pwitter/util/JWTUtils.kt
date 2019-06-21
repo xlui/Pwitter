@@ -28,7 +28,7 @@ object JWTUtils {
             val verifier = JWT.require(algorithm)
                     .withClaim(claim, username)
                     .build()
-            val jwt = verifier.verify(token)
+            verifier.verify(token)
             return true
         } catch (e: Exception) {
             throw InternalException("Catch exception while verifying jwt token!", e)
