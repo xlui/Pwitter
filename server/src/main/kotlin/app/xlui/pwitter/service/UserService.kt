@@ -21,6 +21,8 @@ class UserService @Autowired constructor(
 
     fun findByUsernameAndPassword(username: String, password: String) = userRepository.findByUsernameAndPassword(username, password)
 
+    fun findFollowings(user: User) = userRepository.findFollowings(user)
+
     fun exist(username: String) = userRepository.findByUsername(username) != null
 
     fun exist(user: User) = exist(user.username)

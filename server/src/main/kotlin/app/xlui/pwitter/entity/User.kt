@@ -1,11 +1,13 @@
 package app.xlui.pwitter.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.Length
 import java.time.LocalDateTime
 import javax.persistence.Column
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
+import javax.persistence.OneToMany
 import javax.persistence.Table
 import javax.validation.constraints.Email
 
@@ -22,4 +24,8 @@ data class User(
 
         val createTime: LocalDateTime = LocalDateTime.now(),
         val updateTime: LocalDateTime = LocalDateTime.now()
-)
+) {
+    @OneToMany(mappedBy = "user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    val tweets: List<Tweet> = listOf()
+}

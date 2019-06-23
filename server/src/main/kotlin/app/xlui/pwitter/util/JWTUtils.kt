@@ -7,6 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import java.util.Date
 
 object JWTUtils {
+    val log = logger<JWTUtils>()
     private const val claim = "username"
 
     fun sign(username: String, secret: String): String {
@@ -23,15 +24,16 @@ object JWTUtils {
     }
 
     fun verify(token: String, username: String, secret: String): Boolean {
-        try {
+        return try {
             val algorithm = Algorithm.HMAC256(secret)
             val verifier = JWT.require(algorithm)
                     .withClaim(claim, username)
                     .build()
             verifier.verify(token)
-            return true
+            true
         } catch (e: Exception) {
-            throw InternalException("Catch exception while verifying jwt token!", e)
+            log.info("Failed to verify token!")
+            false
         }
     }
 

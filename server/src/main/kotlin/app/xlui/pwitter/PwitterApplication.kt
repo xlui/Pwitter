@@ -17,6 +17,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.time.LocalDateTime
 import java.time.ZoneId
+import java.util.Date
 
 @SpringBootApplication
 class PwitterApplication @Autowired constructor(
@@ -37,6 +38,8 @@ class PwitterApplication @Autowired constructor(
 
     private fun init() {
         val faker = Faker()
+        val from = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+        val to = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
 
         val salt = generateSalt()
         val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt)
@@ -48,15 +51,15 @@ class PwitterApplication @Autowired constructor(
         val follow2 = Follow(user = follower2, follower = mainUser)
         val follow3 = Follow(user = follower3, follower = mainUser)
 
-        val tweet1_1 = Tweet(content = faker.lorem().sentence(), user = follower1, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet1_2 = Tweet(content = faker.lorem().sentence(), user = follower1, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet1_3 = Tweet(content = faker.lorem().sentence(), user = follower1, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet2_1 = Tweet(content = faker.lorem().sentence(), user = follower2, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet2_2 = Tweet(content = faker.lorem().sentence(), user = follower2, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet3_1 = Tweet(content = faker.lorem().sentence(), user = follower3, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet3_2 = Tweet(content = faker.lorem().sentence(), user = follower3, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet3_3 = Tweet(content = faker.lorem().sentence(), user = follower3, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
-        val tweet3_4 = Tweet(content = faker.lorem().sentence(), user = follower3, createTime = LocalDateTime.ofInstant(faker.date().birthday().toInstant(), ZoneId.systemDefault()))
+        val tweet1_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
+        val tweet1_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
+        val tweet1_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
+        val tweet2_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower2 }
+        val tweet2_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower2 }
+        val tweet3_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
+        val tweet3_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
+        val tweet3_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
+        val tweet3_4 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
 
         userService.save(listOf(mainUser, follower1, follower2, follower3))
         followService.save(listOf(follow1, follow2, follow3))
