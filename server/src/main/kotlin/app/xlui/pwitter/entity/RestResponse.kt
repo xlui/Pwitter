@@ -16,9 +16,11 @@ enum class ResponseCode(
         val value: Int,
         val description: String
 ) {
-    OK(0, "request successfully processed!"),
+    OK(0, "Request successfully processed!"),
 
-    UsernameExist(10000, "username already exist!"),
+    UsernameAlreadyExist(10000, "Username already exist!"),
+    MissingAuthorizationHeader(10001, "Request header must contain authorization field!"),
+    InvalidTokenFormat(10002, "Invalid token!"),
     InvalidRequest(19999, "Invalid request!"),
 
     InternalError(99999, "Unknown internal error, please contact the admin!")

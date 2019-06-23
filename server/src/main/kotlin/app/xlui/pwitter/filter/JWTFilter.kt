@@ -4,6 +4,7 @@ import app.xlui.pwitter.entity.JWTToken
 import app.xlui.pwitter.entity.ResponseCode
 import app.xlui.pwitter.entity.RestResponse
 import com.fasterxml.jackson.databind.ObjectMapper
+import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
 import org.springframework.http.HttpStatus
 import org.springframework.util.StringUtils
@@ -34,17 +35,24 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
     override fun onAccessDenied(request: ServletRequest?, response: ServletResponse?): Boolean {
         val authorization = getAuthzHeader(request)
         return if (StringUtils.isEmpty(authorization)) {
-            response?.contentType = "application/json"
-            response?.outputStream?.println(
-                    ObjectMapper().writeValueAsString(
-                            RestResponse.buildError(ResponseCode.InvalidRequest, "Request header must contain authorization field!")
-                    )
-            )
+            buildResponse(response, RestResponse.buildError(ResponseCode.MissingAuthorizationHeader))
             false
         } else {
             val token = JWTToken(authorization)
-            getSubject(request, response).login(token)
-            true
+            try {
+                getSubject(request, response).login(token)
+                true
+            } catch (e: AuthenticationException) {
+                buildResponse(response, RestResponse.buildError(ResponseCode.InvalidTokenFormat))
+                false
+            }
+        }
+    }
+
+    private fun buildResponse(response: ServletResponse?, restResponse: RestResponse) {
+        response?.let {
+            response.contentType = "application/json"
+            response.outputStream.println(ObjectMapper().writeValueAsString(restResponse))
         }
     }
 }
