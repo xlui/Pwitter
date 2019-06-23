@@ -19,6 +19,7 @@
         <kotlin.version>1.2.71</kotlin.version>
         <shiro.version>1.4.1</shiro.version>
         <jwt.version>3.8.1</jwt.version>
+        <faker.version>0.18</faker.version>
     </properties>
 
     <dependencies>
@@ -52,6 +53,12 @@
             <artifactId>java-jwt</artifactId>
             <version>${jwt.version}</version>
         </dependency>
+        <dependency>
+            <groupId>com.github.javafaker</groupId>
+            <artifactId>javafaker</artifactId>
+            <version>${faker.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.mariadb.jdbc</groupId>

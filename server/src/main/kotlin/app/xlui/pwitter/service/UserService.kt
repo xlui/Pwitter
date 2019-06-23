@@ -1,8 +1,6 @@
 package app.xlui.pwitter.service
 
 import app.xlui.pwitter.entity.User
-import app.xlui.pwitter.exception.InternalException
-import app.xlui.pwitter.exception.InvalidRequestException
 import app.xlui.pwitter.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -11,13 +9,13 @@ import org.springframework.stereotype.Service
 class UserService @Autowired constructor(
         private val userRepository: UserRepository
 ) {
-    fun save(user: User) {
-        userRepository.save(user)
-    }
+    fun save(user: User) = userRepository.save(user)
 
-    fun delete(user: User) {
-        userRepository.delete(user)
-    }
+    fun save(users: Iterable<User>) = userRepository.saveAll(users)
+
+    fun delete(user: User) = userRepository.delete(user)
+
+    fun deleteAll() = userRepository.deleteAll()
 
     fun findByUsername(username: String) = userRepository.findByUsername(username)
 

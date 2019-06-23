@@ -10,7 +10,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "t_like")
-class Like(
+data class Like(
         @Id @GeneratedValue val id: Long = 0,
 
         @ManyToOne val user: User = User(),

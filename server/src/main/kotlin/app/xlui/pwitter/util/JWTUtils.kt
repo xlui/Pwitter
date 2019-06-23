@@ -7,7 +7,7 @@ import com.auth0.jwt.algorithms.Algorithm
 import java.util.Date
 
 object JWTUtils {
-    val claim = "username"
+    private const val claim = "username"
 
     fun sign(username: String, secret: String): String {
         try {

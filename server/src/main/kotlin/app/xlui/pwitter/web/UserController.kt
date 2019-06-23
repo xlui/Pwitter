@@ -21,12 +21,10 @@ class UserController @Autowired constructor(
 ) {
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
     fun register(@RequestBody param: User): RestResponse {
-        val username = param.username
-        val password = param.password
-        if (userService.exist(username)) return RestResponse.buildError(ResponseCode.UsernameAlreadyExist)
+        if (userService.exist(param.username)) return RestResponse.buildError(ResponseCode.UsernameAlreadyExist)
 
         val salt = generateSalt()
-        val user = User(username = username, password = generateEncryptedPassword(password, salt), salt = salt)
+        val user = User(username = param.username, password = generateEncryptedPassword(param.password, salt), salt = salt)
         userService.save(user)
 
         return RestResponse.buildSuccess("Successfully register!")

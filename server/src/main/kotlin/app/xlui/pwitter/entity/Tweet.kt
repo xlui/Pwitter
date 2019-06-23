@@ -9,7 +9,7 @@ import javax.persistence.Table
 
 @Entity
 @Table(name = "t_tweet")
-class Tweet(
+data class Tweet(
         @Id @GeneratedValue val id: Long = 0,
         val type: TweetType = TweetType.CONTENT,
         val content: String = "",
