@@ -1,11 +1,13 @@
 package app.xlui.pwitter.entity
 
+import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
 import javax.persistence.Id
 import javax.persistence.JoinColumn
 import javax.persistence.ManyToOne
+import javax.persistence.OneToMany
 import javax.persistence.Table
 
 @Entity
@@ -21,6 +23,10 @@ data class Tweet(
     @ManyToOne
     @JoinColumn(name = "user_id")
     var user: User = User()
+
+    @OneToMany(mappedBy = "tweet")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    val comments: List<Comment> = listOf()
 }
 
 enum class TweetMediaType {

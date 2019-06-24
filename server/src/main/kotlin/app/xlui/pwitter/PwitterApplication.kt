@@ -1,9 +1,11 @@
 package app.xlui.pwitter
 
 import app.xlui.pwitter.config.PwitterProperties
+import app.xlui.pwitter.entity.Comment
 import app.xlui.pwitter.entity.Follow
 import app.xlui.pwitter.entity.Tweet
 import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.service.CommentService
 import app.xlui.pwitter.service.FollowService
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
@@ -24,6 +26,7 @@ class PwitterApplication @Autowired constructor(
         val userService: UserService,
         val followService: FollowService,
         val tweetService: TweetService,
+        val commentService: CommentService,
         val pwitterProperties: PwitterProperties
 ) : CommandLineRunner {
     val logger = logger<PwitterApplication>()
@@ -38,8 +41,6 @@ class PwitterApplication @Autowired constructor(
 
     private fun init() {
         val faker = Faker()
-        val from = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
-        val to = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
 
         val salt = generateSalt()
         val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt)
@@ -51,6 +52,10 @@ class PwitterApplication @Autowired constructor(
         val follow2 = Follow(user = follower2, follower = mainUser)
         val follow3 = Follow(user = follower3, follower = mainUser)
 
+        val from = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
+        val to = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
+        val tweet1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = mainUser }
+        val tweet2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = mainUser }
         val tweet1_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
         val tweet1_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
         val tweet1_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
@@ -61,9 +66,14 @@ class PwitterApplication @Autowired constructor(
         val tweet3_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
         val tweet3_4 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
 
+        val comment1 = Comment(content = faker.lorem().sentence()).apply { user = follower1; tweet = tweet1 }
+        val comment2 = Comment(content = faker.lorem().sentence()).apply { user = follower2; tweet = tweet1 }
+        val comment3 = Comment(content = faker.lorem().sentence(), replyTo = 2).apply { user = follower3; tweet = tweet1 }
+
         userService.save(listOf(mainUser, follower1, follower2, follower3))
         followService.save(listOf(follow1, follow2, follow3))
-        tweetService.save(listOf(tweet1_1, tweet1_2, tweet1_3, tweet2_1, tweet2_2, tweet3_1, tweet3_2, tweet3_3, tweet3_4))
+        tweetService.save(listOf(tweet1, tweet2, tweet1_1, tweet1_2, tweet1_3, tweet2_1, tweet2_2, tweet3_1, tweet3_2, tweet3_3, tweet3_4))
+        commentService.save(listOf(comment1, comment2, comment3))
     }
 }
 

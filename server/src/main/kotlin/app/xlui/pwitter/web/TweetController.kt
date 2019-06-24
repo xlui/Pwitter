@@ -8,6 +8,7 @@ import app.xlui.pwitter.entity.TweetMediaType
 import app.xlui.pwitter.entity.User
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
+import app.xlui.pwitter.util.unpack
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.util.StringUtils
@@ -62,5 +63,14 @@ class TweetController @Autowired constructor(
         } else {
             RestResponse.buildSuccess(tweet.get())
         }
+    }
+
+    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = arrayOf(RequestMethod.GET))
+    fun comments(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long): RestResponse {
+        val tweet = unpack(tweetService.findByTweetId(tweetId))
+        tweet?.let {
+            return RestResponse.buildSuccess(it.comments)
+        }
+        return RestResponse.buildError(ResponseCode.TweetIdInvalid)
     }
 }

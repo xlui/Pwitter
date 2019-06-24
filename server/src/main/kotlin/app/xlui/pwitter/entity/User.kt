@@ -19,7 +19,7 @@ data class User(
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @Length(min = 8, max = 32) val password: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val salt: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @Email val email: String = "",
-        val nickname: String = "",
+        @Column(length = 32) val nickname: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val deleted: Boolean = false,
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val createTime: LocalDateTime = LocalDateTime.now(),

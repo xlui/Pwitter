@@ -2,9 +2,12 @@ package app.xlui.pwitter.util
 
 import org.slf4j.LoggerFactory
 import java.security.MessageDigest
+import java.util.Optional
 import java.util.UUID
 
 inline fun <reified T> logger() = LoggerFactory.getLogger(T::class.java)!!
+
+fun <T> unpack(pack: Optional<T>): T? = if (pack.isEmpty) null else pack.get()
 
 fun generateSalt() = "${UUID.randomUUID().run { toString().replace("-", "") }}YttTxE*@7R8W*tJen9p6${System.currentTimeMillis()}"
 
