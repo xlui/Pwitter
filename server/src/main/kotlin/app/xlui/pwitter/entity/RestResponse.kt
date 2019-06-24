@@ -22,6 +22,8 @@ enum class ResponseCode(
     MissingAuthorizationHeader(10001, "Request header must contain authorization field!"),
     InvalidTokenFormat(10002, "Invalid token!"),
     UsernameOrPasswordInvalid(10003, "Username or password is invalid!"),
+    TweetContentInvalid(10004, "Tweet content or media should not be empty!"),
+    TweetIdInvalid(10005, "Tweet ID is invalid, no tweet found with this ID"),
     InvalidRequest(19999, "Invalid request!"),
 
     InternalError(99999, "Unknown internal error, please contact the admin!")

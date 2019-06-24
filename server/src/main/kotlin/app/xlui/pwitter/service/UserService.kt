@@ -17,7 +17,7 @@ class UserService @Autowired constructor(
 
     fun deleteAll() = userRepository.deleteAll()
 
-    fun findByUsername(username: String, isDeleted: Boolean = false) = userRepository.findByUsername(username)?.takeIf { isDeleted == it.isDeleted }
+    fun findByUsername(username: String, isDeleted: Boolean = false) = userRepository.findByUsername(username)?.takeIf { isDeleted == it.deleted }
 
     fun findByUsernameAndPassword(username: String, password: String) = userRepository.findByUsernameAndPassword(username, password)
 

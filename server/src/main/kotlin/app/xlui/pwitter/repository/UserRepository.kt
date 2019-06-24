@@ -14,6 +14,6 @@ interface UserRepository : JpaRepository<User, Long> {
             "INNER JOIN Follow AS f " +
             "ON u.id = f.user.id " +
             "WHERE f.follower.id = :#{#user.id} " +
-            "AND u.isDeleted = false")
+            "AND u.deleted = false")
     fun findFollowings(@Param("user") user: User): List<User>
 }

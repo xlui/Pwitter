@@ -1,6 +1,5 @@
 package app.xlui.pwitter.entity
 
-import com.fasterxml.jackson.annotation.JsonProperty
 import java.time.LocalDateTime
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue
@@ -21,7 +20,6 @@ data class Tweet(
 ) {
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var user: User = User()
 }
 

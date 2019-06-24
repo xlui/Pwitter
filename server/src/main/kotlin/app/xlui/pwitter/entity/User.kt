@@ -16,14 +16,14 @@ import javax.validation.constraints.Email
 data class User(
         @Id @GeneratedValue val id: Long = 0,
         @Column(unique = true, length = 32) val username: String = "",
-        @Length(min = 8, max = 32) val password: String = "",
-        val salt: String = "",
-        @Email val email: String = "",
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @Length(min = 8, max = 32) val password: String = "",
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val salt: String = "",
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) @Email val email: String = "",
         val nickname: String = "",
-        val isDeleted: Boolean = false,
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val deleted: Boolean = false,
 
-        val createTime: LocalDateTime = LocalDateTime.now(),
-        val updateTime: LocalDateTime = LocalDateTime.now()
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val createTime: LocalDateTime = LocalDateTime.now(),
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val updateTime: LocalDateTime = LocalDateTime.now()
 ) {
     @OneToMany(mappedBy = "user")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
