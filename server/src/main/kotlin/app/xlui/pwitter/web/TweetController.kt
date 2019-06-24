@@ -6,9 +6,12 @@ import app.xlui.pwitter.entity.User
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
+import java.time.LocalDate
 
 @RestController
 class TweetController @Autowired constructor(
@@ -16,12 +19,21 @@ class TweetController @Autowired constructor(
         val tweetService: TweetService
 ) {
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.GET])
-    fun timeline(@CurrentUser user: User): RestResponse {
+    fun timeline(
+            @CurrentUser user: User,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) from: LocalDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) to: LocalDate
+    ): RestResponse {
         /**
          * 考虑根据关注者点赞、评论、转发形成一个公式计算出关注着点赞或转发的最有价值的几条 tweet 插入用户的 timeline
          */
         val followings = userService.findFollowings(user)
-        val tweets = followings.flatMap { it.tweets }.sortedBy { it.createTime }
+        val tweets = followings.flatMap { it.tweets }
+                .filter {
+                    val date = it.createTime.toLocalDate()
+                    from <= date && date <= to
+                }
+                .sortedBy { it.createTime }
         return RestResponse.buildSuccess(tweets)
     }
 
