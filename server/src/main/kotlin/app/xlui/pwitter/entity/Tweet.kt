@@ -13,8 +13,9 @@ import javax.persistence.Table
 @Table(name = "t_tweet")
 data class Tweet(
         @Id @GeneratedValue val id: Long = 0,
-        val type: TweetType = TweetType.CONTENT,
         val content: String = "",
+        val mediaType: TweetMediaType = TweetMediaType.None,
+        val media: String = "",
 
         val createTime: LocalDateTime = LocalDateTime.now()
 ) {
@@ -24,9 +25,9 @@ data class Tweet(
     var user: User = User()
 }
 
-enum class TweetType {
-    CONTENT,
-    IMAGE,
-    CONTENT_IMAGE,
-    VIDEO
+enum class TweetMediaType {
+    None,
+    Image,
+    Video,
+    ReTweet
 }
