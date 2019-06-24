@@ -44,7 +44,7 @@ class PwitterApplication @Autowired constructor(
         val salt = generateSalt()
         val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt)
         val follower1 = User(username = "f1", password = generateEncryptedPassword("p1", salt), salt = salt)
-        val follower2 = User(username = "f2", password = generateEncryptedPassword("p2", salt), salt = salt)
+        val follower2 = User(username = "f2", password = generateEncryptedPassword("p2", salt), salt = salt, isDeleted = true)
         val follower3 = User(username = "f3", password = generateEncryptedPassword("p3", salt), salt = salt)
 
         val follow1 = Follow(user = follower1, follower = mainUser)

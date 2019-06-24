@@ -3,7 +3,6 @@ package app.xlui.pwitter.web
 import app.xlui.pwitter.entity.ResponseCode
 import app.xlui.pwitter.entity.RestResponse
 import app.xlui.pwitter.entity.User
-import app.xlui.pwitter.exception.InvalidRequestException
 import app.xlui.pwitter.service.UserService
 import app.xlui.pwitter.util.JWTUtils
 import app.xlui.pwitter.util.generateEncryptedPassword
@@ -33,7 +32,7 @@ class UserController @Autowired constructor(
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
     fun login(@RequestBody param: User): RestResponse {
         if (StringUtils.isEmpty(param.username) || StringUtils.isEmpty(param.password)) {
-            throw InvalidRequestException("Username or password is invalid")
+            return RestResponse.buildError(ResponseCode.UsernameOrPasswordInvalid)
         }
 
         val user = userService.findByUsername(param.username)
@@ -43,7 +42,7 @@ class UserController @Autowired constructor(
                 return RestResponse.buildSuccess(JWTUtils.sign(it.username, it.password))
             }
         }
-        throw InvalidRequestException("Username or password is invalid")
+        return RestResponse.buildError(ResponseCode.UsernameOrPasswordInvalid)
     }
 
     @RequestMapping("/t")

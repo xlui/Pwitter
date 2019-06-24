@@ -10,6 +10,9 @@ interface UserRepository : JpaRepository<User, Long> {
 
     fun findByUsernameAndPassword(username: String, password: String): User?
 
-    @Query("SELECT u FROM User AS u INNER JOIN Follow AS f ON u.id = f.user.id WHERE f.follower.id = :#{#user.id}")
+    @Query("SELECT u FROM User AS u " +
+            "INNER JOIN Follow AS f " +
+            "ON u.id = f.user.id " +
+            "WHERE f.follower.id = :#{#user.id} AND u.isDeleted = false")
     fun findFollowings(@Param("user") user: User): List<User>
 }

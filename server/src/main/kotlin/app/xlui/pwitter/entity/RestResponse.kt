@@ -21,6 +21,7 @@ enum class ResponseCode(
     UsernameAlreadyExist(10000, "Username already exist!"),
     MissingAuthorizationHeader(10001, "Request header must contain authorization field!"),
     InvalidTokenFormat(10002, "Invalid token!"),
+    UsernameOrPasswordInvalid(10003, "Username or password is invalid!"),
     InvalidRequest(19999, "Invalid request!"),
 
     InternalError(99999, "Unknown internal error, please contact the admin!")

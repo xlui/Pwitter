@@ -16,14 +16,17 @@ class TweetController @Autowired constructor(
         val tweetService: TweetService
 ) {
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.GET])
-    fun fetchTweets(@CurrentUser user: User): RestResponse {
+    fun timeline(@CurrentUser user: User): RestResponse {
+        /**
+         * 考虑根据关注者点赞、评论、转发形成一个公式计算出关注着点赞或转发的最有价值的几条 tweet 插入用户的 timeline
+         */
         val followings = userService.findFollowings(user)
         val tweets = followings.flatMap { it.tweets }.sortedBy { it.createTime }
         return RestResponse.buildSuccess(tweets)
     }
 
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.POST])
-    fun submitTweet(): RestResponse {
+    fun createTweet(): RestResponse {
         return RestResponse.buildSuccess("ok")
     }
 }

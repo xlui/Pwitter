@@ -12,8 +12,7 @@ fun generateEncryptedPassword(password: String, salt: String = generateSalt()) =
         .digest("$password$salt".toByteArray())
         .joinToString("") { String.format("%02x", it) }
 
-class CommonUtils {
-}
+class CommonUtils
 
 fun main(args: Array<String>) {
     println(generateEncryptedPassword("pass", "salt"))
