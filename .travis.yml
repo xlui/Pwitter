@@ -1,9 +1,13 @@
 language: java
 jdk:
     - openjdk11
+addons:
+    mariadb: "10.3"
+before_install:
+    - mysql -u root < "CREATE DATABASE Pwitter CHARACTER SET utf8mb4;"
 install:
     - cd server
     - mvn install -DskipTests -Dmaven.javadoc.skip
 script:
-    - mvn test
+    - mvn test -Dspring.profiles.active=test
 
