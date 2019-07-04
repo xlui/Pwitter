@@ -1,11 +1,13 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.annotation.CurrentUser
+import app.xlui.pwitter.entity.Comment
 import app.xlui.pwitter.entity.ResponseCode
 import app.xlui.pwitter.entity.RestResponse
 import app.xlui.pwitter.entity.Tweet
 import app.xlui.pwitter.entity.TweetMediaType
 import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.service.CommentService
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
 import app.xlui.pwitter.util.unpack
@@ -23,7 +25,8 @@ import java.time.LocalDate
 @RestController
 class TweetController @Autowired constructor(
         val userService: UserService,
-        val tweetService: TweetService
+        val tweetService: TweetService,
+        val commentService: CommentService
 ) {
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.GET])
     fun timeline(
@@ -35,7 +38,7 @@ class TweetController @Autowired constructor(
          * 考虑根据关注者点赞、评论、转发形成一个公式计算出关注着点赞或转发的最有价值的几条 tweet 插入用户的 timeline
          */
         val followings = userService.findFollowings(user)
-        val timelineUser = mutableListOf<User>(user).apply { addAll(followings) }
+        val timelineUser = mutableListOf(user).apply { addAll(followings) }
         val tweets = timelineUser.flatMap { it.tweets }
                 .filter {
                     val date = it.createTime.toLocalDate()
@@ -55,7 +58,7 @@ class TweetController @Autowired constructor(
         return RestResponse.buildSuccess("Successfully create a tweet!")
     }
 
-    @RequestMapping(value = ["/tweet/{tweetId}"], method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/tweet/{tweetId}"], method = [RequestMethod.GET])
     fun viewTweet(@PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = tweetService.findByTweetId(tweetId)
         return if (tweet.isEmpty || tweet.get().user.deleted) {
@@ -65,11 +68,24 @@ class TweetController @Autowired constructor(
         }
     }
 
-    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = arrayOf(RequestMethod.GET))
+    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.GET])
     fun comments(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = unpack(tweetService.findByTweetId(tweetId))
         tweet?.let {
             return RestResponse.buildSuccess(it.comments)
+        }
+        return RestResponse.buildError(ResponseCode.TweetIdInvalid)
+    }
+
+    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.POST])
+    fun createComment(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long, @RequestBody param: Comment): RestResponse {
+        val tweet = unpack(tweetService.findByTweetId(tweetId))
+        tweet?.let {
+            val comment = Comment(replyTo = param.replyTo, content = param.content).apply {
+                this.user = user
+                this.tweet = it
+            }
+            commentService.save(comment)
         }
         return RestResponse.buildError(ResponseCode.TweetIdInvalid)
     }
