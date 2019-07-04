@@ -4,7 +4,7 @@ jdk:
 addons:
     mariadb: "10.3"
 before_install:
-    - mysql -u root < "CREATE DATABASE Pwitter CHARACTER SET utf8mb4;"
+    - mysql -u root -e "CREATE DATABASE Pwitter CHARACTER SET utf8mb4;"
 install:
     - cd server
     - mvn install -DskipTests -Dmaven.javadoc.skip
