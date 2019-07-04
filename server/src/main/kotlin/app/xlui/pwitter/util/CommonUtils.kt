@@ -17,11 +17,3 @@ fun generateSalt() = "${UUID.randomUUID().run { toString().replace("-", "") }}Yt
 fun generateEncryptedPassword(password: String, salt: String = generateSalt()) = MessageDigest.getInstance("MD5")
         .digest("$password$salt".toByteArray())
         .joinToString("") { String.format("%02x", it) }
-
-class CommonUtils
-
-fun main(args: Array<String>) {
-    println(generateEncryptedPassword("pass", "salt"))
-    println(generateEncryptedPassword("pass", "salt"))
-    println(generateEncryptedPassword("pass", "salt"))
-}
