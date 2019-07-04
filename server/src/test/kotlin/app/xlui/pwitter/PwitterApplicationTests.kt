@@ -11,6 +11,6 @@ class PwitterApplicationTests {
 
     @Test
     fun contextLoads() {
+        println("Application load success!")
     }
-
 }

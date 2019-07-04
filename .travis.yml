@@ -1,0 +1,9 @@
+language: java
+jdk:
+    - openjdk11
+install:
+    - cd server
+    - mvn install -DskipTests -Dmaven.javadoc.skip
+script:
+    - mvn test
+
