@@ -1,29 +1,35 @@
 import React from 'react';
 import './App.css';
-import {Breadcrumb, Layout, Menu} from 'antd'
+import {Card, Col, Layout, Row} from 'antd'
 
-const {Header, Content, Footer} = Layout
+const {Content, Footer} = Layout
 
 function App() {
     return (
-        <Layout className="layout">
-            <Header>
-                <div className="logo"/>
-                <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} style={{lineHeight: '64px'}}>
-                    <Menu.Item key="1">Nav 1</Menu.Item>
-                    <Menu.Item key="2">Nav 2</Menu.Item>
-                    <Menu.Item key="3">Nav 3</Menu.Item>
-                </Menu>
-            </Header>
-            <Content style={{padding: '0 50px'}}>
-                <Breadcrumb style={{margin: '16px 0'}}>
-                    <Breadcrumb.Item>Home</Breadcrumb.Item>
-                    <Breadcrumb.Item>List</Breadcrumb.Item>
-                    <Breadcrumb.Item>App</Breadcrumb.Item>
-                </Breadcrumb>
-                <div style={{background: '#fff', padding: 24, minHeight: 780}}>Content</div>
+        <Layout className="layout" style={{height: "100%"}}>
+            <Content style={{height: "100%", paddingBottom: 50}}>
+                <Row type="flex" justify="center" align="middle" style={{height: "100%"}}>
+                    <Col span={5}>
+                        <img src="" alt="this is a icon"/>
+                        {/* Icon */}
+                        <Card title="Find the most interesting things on the internet!" style={{width: "auto"}}>
+                            Register
+                            <br/>
+                            Login
+                        </Card>
+                    </Col>
+                </Row>
             </Content>
-            <Footer style={{textAlign: 'center'}}>Powered by Ant Design ♥</Footer>
+            <Footer style={{
+                height: 50,
+                marginTop: -50,
+                padding: 0,
+                boxSizing: "border-box",
+                textAlign: 'center'
+            }}>
+                <hr style={{margin: "0 15%", width: 'auto'}}/>
+                <p style={{margin: 0, padding: "8px 0"}}>Powered by Ant Design ♥</p>
+            </Footer>
         </Layout>
     );
 }
