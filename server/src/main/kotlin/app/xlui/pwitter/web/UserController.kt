@@ -13,17 +13,24 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
 import org.springframework.web.bind.annotation.RestController
+import javax.validation.Valid
 
 @RestController
 class UserController @Autowired constructor(
         private val userService: UserService
 ) {
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
-    fun register(@RequestBody param: User): RestResponse {
+    fun register(@RequestBody @Valid param: User): RestResponse {
         if (userService.exist(param.username)) return RestResponse.buildError(ResponseCode.UsernameAlreadyExist)
 
         val salt = generateSalt()
-        val user = User(username = param.username, password = generateEncryptedPassword(param.password, salt), salt = salt)
+        val user = User(
+                username = param.username,
+                password = generateEncryptedPassword(param.password, salt),
+                salt = salt,
+                email = param.email,
+                nickname = if (param.nickname.isEmpty()) param.username else param.nickname
+        )
         userService.save(user)
 
         return RestResponse.buildSuccess("Successfully register!")
@@ -46,5 +53,5 @@ class UserController @Autowired constructor(
     }
 
     @RequestMapping("/t")
-    fun test() = RestResponse.buildSuccess("Successfully access API.")
+    fun test(@RequestBody username: Map<String, String>) = RestResponse.buildSuccess("Successfully access API. $username")
 }

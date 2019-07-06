@@ -18,24 +18,6 @@ import javax.servlet.http.HttpServletResponse
 class JWTFilter : BasicHttpAuthenticationFilter() {
     val log = logger<JWTFilter>()
 
-    /**
-     * Add support for cross origin
-     */
-    override fun preHandle(request: ServletRequest?, response: ServletResponse?): Boolean {
-        log.info("Add support for cross origin")
-        val httpRequest = request as HttpServletRequest
-        val httpResponse = response as HttpServletResponse
-        httpResponse.setHeader("Access-control-Allow-Origin", httpRequest.getHeader("Origin"))
-        httpResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE")
-        httpResponse.setHeader("Access-Control-Allow-Headers", httpRequest.getHeader("Access-Control-Request-Headers"))
-        // Cross origin will send a OPTION request fist, we will return a OK response
-        if (httpRequest.method == RequestMethod.OPTIONS.name) {
-            httpResponse.status = HttpStatus.OK.value()
-            return false
-        }
-        return super.preHandle(request, response)
-    }
-
     override fun onAccessDenied(request: ServletRequest?, response: ServletResponse?): Boolean {
         log.info("Start token authentication")
         val authorization = getAuthzHeader(request)

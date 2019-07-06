@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import {Button, Card, Col, Form, Input, Row} from "antd";
+import {postSignUp} from '../api/api'
 
 export default Form.create()(function (props) {
     const [confirmDirty, setConfirmDirty] = useState(false)
@@ -9,6 +10,7 @@ export default Form.create()(function (props) {
         const {value} = e.target
         setConfirmDirty(confirmDirty || !!value)
     }
+
     const validateToNextPassword = (rule, value, callback) => {
         const {form} = props
         if (value && confirmDirty) {
@@ -18,6 +20,7 @@ export default Form.create()(function (props) {
         }
         callback()
     }
+
     const compareToFirstPassword = (rule, value, callback) => {
         const {form} = props
         if (value && value !== form.getFieldValue('password')) {
@@ -26,11 +29,27 @@ export default Form.create()(function (props) {
             callback()
         }
     }
+
     const handleSubmit = e => {
         e.preventDefault()
         props.form.validateFields(((errors, values) => {
             if (!errors) {
-                alert(JSON.stringify(values))
+                postSignUp({
+                    username: values.username,
+                    password: values.password,
+                    email: values.email,
+                    nickname: values.nickname
+                }).then(res => {
+                    if (res.data.code === 0) {
+                        alert('Successfully register!')
+                        props.history.push('/home')
+                    } else {
+                        alert(res.data.error)
+                    }
+                }).catch(error => {
+                    console.log(`Meet error while trying register: ${error.response.data}`)
+                    alert(`Error! Server response: ${JSON.stringify(error.response.data.error)}`)
+                })
             }
         }))
     }
@@ -47,8 +66,11 @@ export default Form.create()(function (props) {
                                         {
                                             required: true,
                                             message: 'Please input your username!'
-                                        }
-                                    ]
+                                        },
+                                    ],
+                                    getValueFromEvent: e => {
+                                        return e.target.value.replace(/\s+/g, '')
+                                    }
                                 })(<Input/>)
                             }
                         </Form.Item>

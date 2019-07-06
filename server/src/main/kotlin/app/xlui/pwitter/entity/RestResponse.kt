@@ -24,6 +24,7 @@ enum class ResponseCode(
     UsernameOrPasswordInvalid(10003, "Username or password is invalid!"),
     TweetContentInvalid(10004, "Tweet content or media should not be empty!"),
     TweetIdInvalid(10005, "Tweet ID is invalid, no tweet found with this ID"),
+    MissingRequiredFields(10006, "Request body missing some required fields"),
     InvalidRequest(19999, "Invalid request!"),
 
     InternalError(99999, "Unknown internal error, please contact the admin!")
