@@ -1,8 +1,8 @@
 import React from 'react';
-import './App.css';
-import Welcome from './welcome'
-import SignUp from './signUp'
-import Login from './login'
+import '../assets/App.css';
+import Welcome from './Welcome'
+import SignUp from './SignUp'
+import Login from './Login'
 import {Layout} from 'antd'
 import {BrowserRouter, Route, Switch} from 'react-router-dom'
 

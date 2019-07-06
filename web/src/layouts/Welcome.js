@@ -1,6 +1,6 @@
 import React from 'react';
 import {Button, Card, Col, Row} from "antd";
-import logo from "./logo.svg";
+import logo from "../assets/logo.svg";
 
 export default function (props) {
     function handleSignUp(e) {
