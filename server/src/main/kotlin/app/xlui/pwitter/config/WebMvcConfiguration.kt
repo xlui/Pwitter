@@ -11,10 +11,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 class WebMvcConfiguration @Autowired constructor(
         val currentUserResolver: CurrentUserMethodArgumentResolver
 ) : WebMvcConfigurer {
+    /**
+     * 添加注解处理类
+     */
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(currentUserResolver)
     }
 
+    /**
+     * 添加跨域请求支持
+     */
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
                 .allowedOrigins("*")

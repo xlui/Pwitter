@@ -12,8 +12,14 @@ inline fun <reified T> logger() = LoggerFactory.getLogger(T::class.java)!!
  */
 fun <T> unpack(pack: Optional<T>): T? = if (pack.isEmpty) null else pack.get()
 
+/**
+ * 生成唯一盐
+ */
 fun generateSalt() = "${UUID.randomUUID().run { toString().replace("-", "") }}YttTxE*@7R8W*tJen9p6${System.currentTimeMillis()}"
 
+/**
+ * 通过对加盐密码求 MD5 得到加密密码
+ */
 fun generateEncryptedPassword(password: String, salt: String = generateSalt()) = MessageDigest.getInstance("MD5")
         .digest("$password$salt".toByteArray())
         .joinToString("") { String.format("%02x", it) }

@@ -18,23 +18,27 @@ import org.springframework.stereotype.Service
 class ShiroRealmService @Autowired constructor(
         private val userService: UserService
 ) : AuthorizingRealm() {
-    val log = logger<ShiroRealmService>()
-
     override fun supports(token: AuthenticationToken?): Boolean {
         return token is JWTToken
     }
 
+    /**
+     * 当前不支持权限管理
+     */
     override fun doGetAuthorizationInfo(p0: PrincipalCollection?): AuthorizationInfo {
         // permission checking
-        throw InternalException("Unsupported method")
+        throw InternalException("Unsupported method!")
     }
 
+    /**
+     * 身份认证
+     */
     override fun doGetAuthenticationInfo(auth: AuthenticationToken?): AuthenticationInfo {
         val token = auth?.credentials as String
         val username = JWTUtils.getUsername(token)
         val user = userService.findByUsername(username) ?: throw AuthenticationException("Invalid token!")
         if (!JWTUtils.verify(token, user.username, user.password)) {
-            throw AuthenticationException("token verify failed!")
+            throw AuthenticationException("Token verify failed!")
         }
         return SimpleAuthenticationInfo(token, token, "Pwitter_realm")
     }

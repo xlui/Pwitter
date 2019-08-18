@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service
 class UserService @Autowired constructor(
         private val userRepository: UserRepository
 ) {
+    /**
+     * 存入数据库
+     */
     fun save(user: User) = userRepository.save(user)
 
     fun save(users: Iterable<User>) = userRepository.saveAll(users)
@@ -23,6 +26,9 @@ class UserService @Autowired constructor(
 
     fun findFollowings(user: User) = userRepository.findFollowings(user)
 
+    /**
+     * 判断是否可以通过 username 查询到用户
+     */
     fun exist(username: String) = userRepository.findByUsername(username) != null
 
     fun exist(user: User) = exist(user.username)

@@ -10,9 +10,12 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.multipart.support.MissingServletRequestPartException
 
+/**
+ * 全局异常处理
+ */
 @RestControllerAdvice
 class GlobalExceptionController {
-    val log = logger<GlobalExceptionController>()
+    private val logger = logger<GlobalExceptionController>()
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [
@@ -20,21 +23,21 @@ class GlobalExceptionController {
         MissingServletRequestPartException::class
     ])
     fun handleBadRequest(e: Exception): RestResponse {
-        log.error("Bad request", e)
+        logger.error("Bad request", e)
         return RestResponse(100001, null, e.message!!)
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [MethodArgumentNotValidException::class])
     fun handleValidateException(e: Exception): RestResponse {
-        log.error("Missing required request body", e)
+        logger.error("Missing required request body", e)
         return RestResponse.buildError(ResponseCode.MissingRequiredFields)
     }
 
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     @ExceptionHandler(value = [InternalException::class])
     fun handlerInternalException(e: Exception): RestResponse {
-        log.error("Internal exception", e)
+        logger.error("Internal exception", e)
         return RestResponse.buildError(ResponseCode.InternalError, e.message!!)
     }
 }

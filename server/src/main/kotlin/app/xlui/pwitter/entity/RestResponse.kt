@@ -1,14 +1,22 @@
 package app.xlui.pwitter.entity
 
+import org.apache.commons.lang3.StringUtils
+
 data class RestResponse(
         val code: Int,
         val data: Any?,
         val error: String
 ) {
     companion object Builder {
-        fun buildSuccess(data: Any?) = RestResponse(0, data, "")
-        fun buildError(code: ResponseCode) = RestResponse(code.value, null, code.description)
-        fun buildError(code: ResponseCode, msg: String) = RestResponse(code.value, null, msg)
+        /**
+         * 构建成功响应
+         */
+        fun buildSuccess(data: Any?, msg: String = "") = RestResponse(0, data, msg)
+
+        /**
+         * 构建错误响应
+         */
+        fun buildError(code: ResponseCode, msg: String = "") = RestResponse(code.value, null, if (StringUtils.isBlank(msg)) code.description else msg)
     }
 }
 

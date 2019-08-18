@@ -29,24 +29,27 @@ class PwitterApplication @Autowired constructor(
         val commentService: CommentService,
         val pwitterProperties: PwitterProperties
 ) : CommandLineRunner {
-    val logger = logger<PwitterApplication>()
+    private val logger = logger<PwitterApplication>()
 
     override fun run(vararg args: String?) {
         if (pwitterProperties.init) {
-            logger.info("Run database init code in CommandLineRunner")
+            logger.info("Run database init code in CommandLineRunner...")
             init()
-            logger.info("Init success")
+            logger.info("Init success!")
         }
     }
 
+    /**
+     * 初始化测试数据
+     */
     private fun init() {
         val faker = Faker()
 
         val salt = generateSalt()
-        val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt)
-        val follower1 = User(username = "f1", password = generateEncryptedPassword("p1", salt), salt = salt)
-        val follower2 = User(username = "f2", password = generateEncryptedPassword("p2", salt), salt = salt, deleted = true)
-        val follower3 = User(username = "f3", password = generateEncryptedPassword("p3", salt), salt = salt)
+        val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt, email = "test@example.com")
+        val follower1 = User(username = "f1", password = generateEncryptedPassword("p1", salt), salt = salt, email = "test@example.com")
+        val follower2 = User(username = "f2", password = generateEncryptedPassword("p2", salt), salt = salt, deleted = true, email = "test@example.com")
+        val follower3 = User(username = "f3", password = generateEncryptedPassword("p3", salt), salt = salt, email = "test@example.com")
 
         val follow1 = Follow(user = follower1, follower = mainUser)
         val follow2 = Follow(user = follower2, follower = mainUser)

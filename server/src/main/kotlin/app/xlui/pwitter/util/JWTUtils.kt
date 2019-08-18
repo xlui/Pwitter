@@ -4,12 +4,15 @@ import app.xlui.pwitter.config.Const
 import app.xlui.pwitter.exception.InternalException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
-import java.util.Date
+import java.util.*
 
 object JWTUtils {
-    val log = logger<JWTUtils>()
+    private val logger = logger<JWTUtils>()
     private const val claim = "username"
 
+    /**
+     * 生成 JWT Token
+     */
     fun sign(username: String, secret: String): String {
         try {
             val expire = Date(System.currentTimeMillis() + Const.tokenExpireTime)
@@ -23,6 +26,9 @@ object JWTUtils {
         }
     }
 
+    /**
+     * 校验 Token
+     */
     fun verify(token: String, username: String, secret: String): Boolean {
         return try {
             val algorithm = Algorithm.HMAC256(secret)
@@ -32,11 +38,14 @@ object JWTUtils {
             verifier.verify(token)
             true
         } catch (e: Exception) {
-            log.info("Failed to verify token!")
+            logger.info("Failed to verify token!")
             false
         }
     }
 
+    /**
+     * 从 Token 获取附带的用户名
+     */
     fun getUsername(token: String): String {
         val jwt = JWT.decode(token)
         return jwt.getClaim(claim).asString()

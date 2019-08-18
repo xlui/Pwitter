@@ -1,25 +1,16 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.annotation.CurrentUser
-import app.xlui.pwitter.entity.Comment
-import app.xlui.pwitter.entity.ResponseCode
-import app.xlui.pwitter.entity.RestResponse
-import app.xlui.pwitter.entity.Tweet
-import app.xlui.pwitter.entity.TweetMediaType
-import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.entity.*
 import app.xlui.pwitter.service.CommentService
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
+import app.xlui.pwitter.util.logger
 import app.xlui.pwitter.util.unpack
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.util.StringUtils
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestMethod
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
 
 @RestController
@@ -28,6 +19,8 @@ class TweetController @Autowired constructor(
         val tweetService: TweetService,
         val commentService: CommentService
 ) {
+    private val logger = logger<TweetController>()
+
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.GET])
     fun timeline(
             @CurrentUser user: User,
