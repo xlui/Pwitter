@@ -1,9 +1,9 @@
 package app.xlui.pwitter.service
 
-import app.xlui.pwitter.entity.JWTToken
-import app.xlui.pwitter.exception.InternalException
+import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.entity.vo.JWTToken
+import app.xlui.pwitter.exception.CommonException
 import app.xlui.pwitter.util.JWTUtils
-import app.xlui.pwitter.util.logger
 import org.apache.shiro.authc.AuthenticationException
 import org.apache.shiro.authc.AuthenticationInfo
 import org.apache.shiro.authc.AuthenticationToken
@@ -27,7 +27,7 @@ class ShiroRealmService @Autowired constructor(
      */
     override fun doGetAuthorizationInfo(p0: PrincipalCollection?): AuthorizationInfo {
         // permission checking
-        throw InternalException("Unsupported method!")
+        throw CommonException(CommonExceptionType.UnsupportedShiroAuthorization)
     }
 
     /**

@@ -1,7 +1,8 @@
 package app.xlui.pwitter.util
 
 import app.xlui.pwitter.config.Const
-import app.xlui.pwitter.exception.InternalException
+import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.exception.CommonException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*
@@ -22,7 +23,7 @@ object JWTUtils {
                     .withExpiresAt(expire)
                     .sign(algorithm)
         } catch (e: Exception) {
-            throw InternalException("Catch exception while generating jwt token!", e)
+            throw CommonException(CommonExceptionType.FailedToGenerateJWTToken)
         }
     }
 

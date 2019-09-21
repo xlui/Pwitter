@@ -1,6 +1,6 @@
 package app.xlui.pwitter.service
 
-import app.xlui.pwitter.entity.Follow
+import app.xlui.pwitter.entity.db.Follow
 import app.xlui.pwitter.repository.FollowRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

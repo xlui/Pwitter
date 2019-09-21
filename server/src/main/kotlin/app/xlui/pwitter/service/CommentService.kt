@@ -1,6 +1,6 @@
 package app.xlui.pwitter.service
 
-import app.xlui.pwitter.entity.Comment
+import app.xlui.pwitter.entity.db.Comment
 import app.xlui.pwitter.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service

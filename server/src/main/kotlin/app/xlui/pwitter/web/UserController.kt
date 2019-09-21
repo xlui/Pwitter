@@ -1,8 +1,8 @@
 package app.xlui.pwitter.web
 
-import app.xlui.pwitter.entity.ResponseCode
-import app.xlui.pwitter.entity.RestResponse
-import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.entity.vo.RestResponse
+import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.service.UserService
 import app.xlui.pwitter.util.JWTUtils
 import app.xlui.pwitter.util.generateEncryptedPassword
@@ -26,7 +26,7 @@ class UserController @Autowired constructor(
      */
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
     fun register(@RequestBody @Valid param: User): RestResponse {
-        if (userService.exist(param.username)) return RestResponse.buildError(ResponseCode.UsernameAlreadyExist)
+        if (userService.exist(param.username)) return RestResponse.buildError(CommonExceptionType.UsernameAlreadyExist)
 
         val salt = generateSalt()
         val user = User(
@@ -47,7 +47,7 @@ class UserController @Autowired constructor(
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
     fun login(@RequestBody param: User): RestResponse {
         if (StringUtils.isBlank(param.username) || StringUtils.isBlank(param.password)) {
-            return RestResponse.buildError(ResponseCode.UsernameOrPasswordInvalid)
+            return RestResponse.buildError(CommonExceptionType.UsernameOrPasswordInvalid)
         }
 
         val user = userService.findByUsername(param.username)
@@ -57,7 +57,7 @@ class UserController @Autowired constructor(
                 return RestResponse.buildSuccess(JWTUtils.sign(it.username, it.password))
             }
         }
-        return RestResponse.buildError(ResponseCode.UsernameOrPasswordInvalid)
+        return RestResponse.buildError(CommonExceptionType.UsernameOrPasswordInvalid)
     }
 
     @RequestMapping("/t")

@@ -1,8 +1,8 @@
 package app.xlui.pwitter.filter
 
-import app.xlui.pwitter.entity.JWTToken
-import app.xlui.pwitter.entity.ResponseCode
-import app.xlui.pwitter.entity.RestResponse
+import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.entity.vo.JWTToken
+import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.util.logger
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.shiro.authc.AuthenticationException
@@ -21,7 +21,7 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
         logger.info("Start token authentication")
         val authorization = getAuthzHeader(request)
         return if (StringUtils.isEmpty(authorization)) {
-            buildResponse(response, RestResponse.buildError(ResponseCode.MissingAuthorizationHeader))
+            buildResponse(response, RestResponse.buildError(CommonExceptionType.MissingAuthorizationHeader))
             logger.info("Token authentication failed of empty authorization field in request")
             false
         } else {
@@ -31,7 +31,7 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
                 logger.info("Token authentication success")
                 true
             } catch (e: AuthenticationException) {
-                buildResponse(response, RestResponse.buildError(ResponseCode.InvalidTokenFormat))
+                buildResponse(response, RestResponse.buildError(CommonExceptionType.InvalidTokenFormat))
                 logger.info("Token authentication failed of invalid token")
                 false
             }

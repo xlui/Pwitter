@@ -1,4 +1,4 @@
-package app.xlui.pwitter.entity
+package app.xlui.pwitter.entity.db
 
 import javax.persistence.Entity
 import javax.persistence.GeneratedValue

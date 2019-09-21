@@ -1,6 +1,6 @@
 package app.xlui.pwitter.service
 
-import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -22,7 +22,7 @@ class UserService @Autowired constructor(
 
     fun findByUsername(username: String, isDeleted: Boolean = false) = userRepository.findByUsername(username)?.takeIf { isDeleted == it.deleted }
 
-    fun findByUsernameAndPassword(username: String, password: String) = userRepository.findByUsernameAndPassword(username, password)
+    fun findByUsernameAndPassword(username: String, password: String, isDeleted: Boolean = false) = userRepository.findByUsernameAndPassword(username, password)?.takeIf { isDeleted == it.deleted }
 
     fun findFollowings(user: User) = userRepository.findFollowings(user)
 

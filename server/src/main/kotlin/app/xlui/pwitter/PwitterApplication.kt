@@ -1,10 +1,10 @@
 package app.xlui.pwitter
 
 import app.xlui.pwitter.config.PwitterProperties
-import app.xlui.pwitter.entity.Comment
-import app.xlui.pwitter.entity.Follow
-import app.xlui.pwitter.entity.Tweet
-import app.xlui.pwitter.entity.User
+import app.xlui.pwitter.entity.db.Comment
+import app.xlui.pwitter.entity.db.Follow
+import app.xlui.pwitter.entity.db.Tweet
+import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.service.CommentService
 import app.xlui.pwitter.service.FollowService
 import app.xlui.pwitter.service.TweetService

@@ -1,4 +1,4 @@
-package app.xlui.pwitter.entity
+package app.xlui.pwitter.entity.db
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.hibernate.validator.constraints.Length

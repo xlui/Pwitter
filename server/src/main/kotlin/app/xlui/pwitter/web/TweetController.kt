@@ -1,7 +1,12 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.annotation.CurrentUser
-import app.xlui.pwitter.entity.*
+import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.TweetMediaType
+import app.xlui.pwitter.entity.db.Comment
+import app.xlui.pwitter.entity.db.Tweet
+import app.xlui.pwitter.entity.db.User
+import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.service.CommentService
 import app.xlui.pwitter.service.TweetService
 import app.xlui.pwitter.service.UserService
@@ -44,7 +49,7 @@ class TweetController @Autowired constructor(
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.POST])
     fun createTweet(@CurrentUser user: User, @RequestBody param: Tweet): RestResponse {
         if (StringUtils.isEmpty(param.content) || (param.mediaType != TweetMediaType.None && StringUtils.isEmpty(param.media))) {
-            return RestResponse.buildError(ResponseCode.TweetContentInvalid)
+            return RestResponse.buildError(CommonExceptionType.TweetContentInvalid)
         }
         val tweet = Tweet(content = param.content, mediaType = param.mediaType, media = param.media).apply { this.user = user }
         tweetService.save(tweet)
@@ -55,7 +60,7 @@ class TweetController @Autowired constructor(
     fun viewTweet(@PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = tweetService.findByTweetId(tweetId)
         return if (tweet.isEmpty || tweet.get().user.deleted) {
-            RestResponse.buildError(ResponseCode.TweetIdInvalid)
+            RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
         } else {
             RestResponse.buildSuccess(tweet.get())
         }
@@ -67,7 +72,7 @@ class TweetController @Autowired constructor(
         tweet?.let {
             return RestResponse.buildSuccess(it.comments)
         }
-        return RestResponse.buildError(ResponseCode.TweetIdInvalid)
+        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
     }
 
     @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.POST])
@@ -80,6 +85,6 @@ class TweetController @Autowired constructor(
             }
             commentService.save(comment)
         }
-        return RestResponse.buildError(ResponseCode.TweetIdInvalid)
+        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
     }
 }

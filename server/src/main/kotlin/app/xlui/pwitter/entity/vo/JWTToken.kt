@@ -1,4 +1,4 @@
-package app.xlui.pwitter.entity
+package app.xlui.pwitter.entity.vo
 
 import org.apache.shiro.authc.AuthenticationToken
 
