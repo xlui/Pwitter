@@ -1,8 +1,8 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.constant.CommonExceptionType
-import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.entity.db.User
+import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.service.UserService
 import app.xlui.pwitter.util.JWTUtils
 import app.xlui.pwitter.util.generateEncryptedPassword
@@ -21,6 +21,7 @@ class UserController @Autowired constructor(
         private val userService: UserService
 ) {
     private val logger = logger<UserController>()
+
     /**
      * 注册
      */

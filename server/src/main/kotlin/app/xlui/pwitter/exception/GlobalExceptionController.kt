@@ -8,7 +8,6 @@ import org.springframework.web.bind.MethodArgumentNotValidException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestControllerAdvice
-import org.springframework.web.multipart.support.MissingServletRequestPartException
 
 /**
  * 全局异常处理
@@ -19,12 +18,11 @@ class GlobalExceptionController {
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [
-        MissingServletRequestPartException::class,
         MethodArgumentNotValidException::class
     ])
     fun handleBadRequest(e: Exception): RestResponse {
         logger.error("Bad request", e)
-        return RestResponse.buildError(CommonExceptionType.InternalError, e.message!!)
+        return RestResponse.buildError(CommonExceptionType.RequestParamInvalid)
     }
 
     @ResponseStatus(HttpStatus.OK)
