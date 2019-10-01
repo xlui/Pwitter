@@ -1,6 +1,8 @@
 import React, {useState} from 'react';
-import {Button, Card, Col, Form, Input, Row} from "antd";
+import {Button, Card, Col, Form, Input, message, Row} from "antd";
 import {postSignUp} from '../api/api'
+import {home, welcome} from "./Const";
+import '../assets/SignUp.less'
 
 export default Form.create()(function (props) {
     const [confirmDirty, setConfirmDirty] = useState(false)
@@ -11,6 +13,13 @@ export default Form.create()(function (props) {
         setConfirmDirty(confirmDirty || !!value)
     }
 
+    /**
+     * Validate that password is equals to confirm
+     *
+     * @param rule validate rule
+     * @param value password value
+     * @param callback success callback
+     */
     const validateToNextPassword = (rule, value, callback) => {
         const {form} = props
         if (value && confirmDirty) {
@@ -21,6 +30,12 @@ export default Form.create()(function (props) {
         callback()
     }
 
+    /**
+     * Validate that confirm password is equal to origin password
+     * @param rule validate rule
+     * @param value confirm password value
+     * @param callback success callback
+     */
     const compareToFirstPassword = (rule, value, callback) => {
         const {form} = props
         if (value && value !== form.getFieldValue('password')) {
@@ -30,6 +45,11 @@ export default Form.create()(function (props) {
         }
     }
 
+    /**
+     * handle submit signup
+     *
+     * @param e event
+     */
     const handleSubmit = e => {
         e.preventDefault()
         props.form.validateFields(((errors, values) => {
@@ -41,24 +61,29 @@ export default Form.create()(function (props) {
                     nickname: values.nickname
                 }).then(res => {
                     if (res.data.code === 0) {
-                        alert('Successfully register!')
-                        props.history.push('/home')
+                        message.success('Successfully register!')
+                        props.history.push(home)
                     } else {
-                        alert(res.data.error)
+                        message.error(res.data.error)
                     }
                 }).catch(error => {
                     console.log(`Meet error while trying register: ${error.response.data}`)
-                    alert(`Error! Server response: ${JSON.stringify(error.response.data.error)}`)
+                    message.error(`Error! Server response: ${JSON.stringify(error.response.data.error)}`)
                 })
             }
         }))
     }
 
+    const goBack = e => {
+        e.preventDefault();
+        props.history.push(welcome)
+    }
+
     return (
-        <Row type="flex" justify="center" align="middle" style={{height: "100%"}}>
-            <Col span={6}>
-                <Card title="Join pwitter now!" style={{width: "auto"}}>
-                    <Form labelCol={{span: 8}} wrapperCol={{span: 16}} labelAlign="left" onSubmit={handleSubmit}>
+        <Row type="flex" justify="center" align="middle" className="Form">
+            <Col span={5}>
+                <Card title="Join pwitter now!">
+                    <Form labelCol={{span: 6}} wrapperCol={{span: 18}} labelAlign="left" onSubmit={handleSubmit}>
                         <Form.Item label="Username:">
                             {
                                 getFieldDecorator('username', {
@@ -68,9 +93,7 @@ export default Form.create()(function (props) {
                                             message: 'Please input your username!'
                                         },
                                     ],
-                                    getValueFromEvent: e => {
-                                        return e.target.value.replace(/\s+/g, '')
-                                    }
+                                    getValueFromEvent: e => e.target.value.replace(/\s+/g, '')
                                 })(<Input/>)
                             }
                         </Form.Item>
@@ -86,7 +109,8 @@ export default Form.create()(function (props) {
                                             required: true,
                                             message: 'Please input your E-mail!'
                                         }
-                                    ]
+                                    ],
+                                    getValueFromEvent: e => e.target.value.replace(/\s+/g, '')
                                 })(<Input/>)
                             }
                         </Form.Item>
@@ -101,7 +125,8 @@ export default Form.create()(function (props) {
                                         {
                                             validator: validateToNextPassword
                                         }
-                                    ]
+                                    ],
+                                    getValueFromEvent: e => e.target.value.replace(/\s+/g, '')
                                 })(<Input.Password/>)
                             }
                         </Form.Item>
@@ -116,7 +141,8 @@ export default Form.create()(function (props) {
                                         {
                                             validator: compareToFirstPassword
                                         }
-                                    ]
+                                    ],
+                                    getValueFromEvent: e => e.target.value.replace(/\s+/g, '')
                                 })(<Input.Password onBlur={handleConfirmBlur}/>)
                             }
                         </Form.Item>
@@ -129,15 +155,16 @@ export default Form.create()(function (props) {
                                             message: 'Please input your nickname!',
                                             whiteSpace: true
                                         }
-                                    ]
+                                    ],
+                                    getValueFromEvent: e => e.target.value.replace(/\s+/g, '')
                                 })(<Input/>)
                             }
                         </Form.Item>
-                        <Form.Item wrapperCol={{span: 16, offset: 8}}>
-                            <Button type="primary" htmlType="submit">
-                                Sign up
-                            </Button>
-                        </Form.Item>
+
+                        <Row type="flex" justify="center" className="Buttons">
+                            <Button type="primary" className="SignUp" htmlType="submit">Sign up</Button>
+                            <Button className="GoBack" onClick={goBack}>Go back</Button>
+                        </Row>
                     </Form>
                 </Card>
             </Col>

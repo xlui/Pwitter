@@ -15,8 +15,12 @@ import app.xlui.pwitter.util.unpack
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.format.annotation.DateTimeFormat
 import org.springframework.util.StringUtils
+import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
+import java.time.format.DateTimeFormatter
+import javax.validation.Valid
+import kotlin.concurrent.fixedRateTimer
 
 @RestController
 class TweetController @Autowired constructor(
@@ -26,29 +30,35 @@ class TweetController @Autowired constructor(
 ) {
     private val logger = logger<TweetController>()
 
+    /**
+     * Timeline, the homepage of each user.
+     */
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.GET])
     fun timeline(
             @CurrentUser user: User,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) from: LocalDate,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) to: LocalDate
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) from: LocalDate?,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) to: LocalDate?
     ): RestResponse {
         /**
          * 考虑根据关注者点赞、评论、转发形成一个公式计算出关注着点赞或转发的最有价值的几条 tweet 插入用户的 timeline
          */
+        val tweetFrom = from ?: LocalDate.now().minusDays(7);
+        val tweetTo = to ?: LocalDate.now();
         val followings = userService.findFollowings(user)
-        val timelineUser = mutableListOf(user).apply { addAll(followings) }
-        val tweets = timelineUser.flatMap { it.tweets }
-                .filter {
-                    val date = it.createTime.toLocalDate()
-                    from <= date && date <= to
-                }
-                .sortedBy { it.createTime }
+        val timelineUsers = mutableListOf(user).apply { addAll(followings) }
+        val tweets = timelineUsers.flatMap { it.tweets }
+                .filter { it.createTime.toLocalDate() in tweetFrom..tweetTo }
+                .sortedByDescending { it.createTime }
         return RestResponse.buildSuccess(tweets)
     }
 
+    /**
+     * Post a new tweet.
+     */
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.POST])
-    fun createTweet(@CurrentUser user: User, @RequestBody param: Tweet): RestResponse {
-        if (StringUtils.isEmpty(param.content) || (param.mediaType != TweetMediaType.None && StringUtils.isEmpty(param.media))) {
+    fun createTweet(@CurrentUser user: User, @RequestBody @Valid param: Tweet, errors: Errors): RestResponse {
+        if (errors.hasErrors()) return RestResponse.buildError(CommonExceptionType.TweetParamInvalid)
+        if (param.mediaType != TweetMediaType.None && StringUtils.isEmpty(param.media)) {
             return RestResponse.buildError(CommonExceptionType.TweetContentInvalid)
         }
         val tweet = Tweet(content = param.content, mediaType = param.mediaType, media = param.media).apply { this.user = user }
@@ -56,25 +66,29 @@ class TweetController @Autowired constructor(
         return RestResponse.buildSuccess("Successfully create a tweet!")
     }
 
+    /**
+     * View a tweet's details.
+     */
     @RequestMapping(value = ["/tweet/{tweetId}"], method = [RequestMethod.GET])
     fun viewTweet(@PathVariable("tweetId") tweetId: Long): RestResponse {
-        val tweet = tweetService.findByTweetId(tweetId)
-        return if (tweet.isEmpty || tweet.get().user.deleted) {
-            RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
-        } else {
-            RestResponse.buildSuccess(tweet.get())
-        }
-    }
-
-    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.GET])
-    fun comments(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = unpack(tweetService.findByTweetId(tweetId))
-        tweet?.let {
-            return RestResponse.buildSuccess(it.comments)
-        }
+        tweet?.takeIf { !it.user.deleted }?.let { return RestResponse.buildSuccess(it) }
         return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
     }
 
+    /**
+     * View a tweet's comments.
+     */
+    @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.GET])
+    fun comments(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long): RestResponse {
+        val tweet = unpack(tweetService.findByTweetId(tweetId))
+        tweet?.let { return RestResponse.buildSuccess(it.comments) }
+        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
+    }
+
+    /**
+     * Post a comment to a tweet or a comment
+     */
     @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.POST])
     fun createComment(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long, @RequestBody param: Comment): RestResponse {
         val tweet = unpack(tweetService.findByTweetId(tweetId))
@@ -84,6 +98,7 @@ class TweetController @Autowired constructor(
                 this.tweet = it
             }
             commentService.save(comment)
+            return RestResponse.buildSuccess("Successfully post a comment!")
         }
         return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
     }

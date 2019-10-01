@@ -10,26 +10,26 @@ import javax.validation.constraints.NotBlank
 @Entity
 @Table(name = "t_user")
 data class User(
-        @JsonProperty(access = JsonProperty.Access.AUTO)
         @Id
         @GeneratedValue
-        val id: Long = 0,
         @JsonProperty(access = JsonProperty.Access.AUTO)
+        val id: Long = 0,
         @Column(unique = true, length = 32)
         @field:NotBlank(message = "Username should not be blank!")
+        @JsonProperty(access = JsonProperty.Access.AUTO)
         val username: String = "",
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @field:Length(min = 8, max = 32, message = "Password length must between 8 and 32 characters!")
         @field:NotBlank(message = "Password should not be blank!")
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val password: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val salt: String = "",
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         @field:NotBlank(message = "Email should not be blank!")
         @field:Email(message = "Email format invalid!")
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val email: String = "",
-        @JsonProperty(access = JsonProperty.Access.AUTO)
         @Column(length = 32)
+        @JsonProperty(access = JsonProperty.Access.AUTO)
         val nickname: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val deleted: Boolean = false,

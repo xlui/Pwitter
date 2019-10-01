@@ -1,5 +1,6 @@
 package app.xlui.pwitter.web
 
+import app.xlui.pwitter.annotation.CurrentUser
 import app.xlui.pwitter.constant.CommonExceptionType
 import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.entity.vo.RestResponse
@@ -10,6 +11,7 @@ import app.xlui.pwitter.util.generateSalt
 import app.xlui.pwitter.util.logger
 import org.apache.commons.lang3.StringUtils
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestMethod
@@ -23,10 +25,15 @@ class UserController @Autowired constructor(
     private val logger = logger<UserController>()
 
     /**
-     * 注册
+     * Register
      */
     @RequestMapping(value = ["/register"], method = [RequestMethod.POST])
-    fun register(@RequestBody @Valid param: User): RestResponse {
+    fun register(@RequestBody @Valid param: User, errors: Errors): RestResponse {
+        // check {@code @Valid} result
+        if (errors.hasErrors()) return RestResponse.buildError(
+                CommonExceptionType.RequestParamInvalid,
+                errors.allErrors.joinToString(separator = "; ") { it.defaultMessage!! }
+        )
         if (userService.exist(param.username)) return RestResponse.buildError(CommonExceptionType.UsernameAlreadyExist)
 
         val salt = generateSalt()
@@ -43,7 +50,7 @@ class UserController @Autowired constructor(
     }
 
     /**
-     * 登录
+     * Login
      */
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
     fun login(@RequestBody param: User): RestResponse {
@@ -62,5 +69,8 @@ class UserController @Autowired constructor(
     }
 
     @RequestMapping("/t")
-    fun test(@RequestBody username: Map<String, String>) = RestResponse.buildSuccess("Successfully access API. $username")
+    fun test(@CurrentUser user: User) = RestResponse.buildSuccess("""
+        Successfully access API.
+        Current user: $user
+    """.trimIndent())
 }

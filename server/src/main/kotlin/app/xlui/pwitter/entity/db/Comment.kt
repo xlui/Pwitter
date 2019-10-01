@@ -12,7 +12,9 @@ import javax.persistence.Table
 @Entity
 @Table(name = "t_comment")
 data class Comment(
-        @Id @GeneratedValue val id: Long = 0,
+        @Id
+        @GeneratedValue
+        val id: Long = 0,
         val replyTo: Long = 0,
         val content: String = "",
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY) val deleted: Boolean = false,
@@ -20,6 +22,8 @@ data class Comment(
         val createTime: LocalDateTime = LocalDateTime.now()
 ) {
     @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonProperty(access = JsonProperty.Access.AUTO)
     var user: User = User()
 
     @ManyToOne

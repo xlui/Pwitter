@@ -12,14 +12,14 @@ class WebMvcConfiguration @Autowired constructor(
         val currentUserResolver: CurrentUserMethodArgumentResolver
 ) : WebMvcConfigurer {
     /**
-     * 添加注解处理类
+     * {@code @CurrentUser} annotation resolver
      */
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(currentUserResolver)
     }
 
     /**
-     * 添加跨域请求支持
+     * Cross-Origin support
      */
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
