@@ -10,16 +10,20 @@ import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter
 import org.springframework.util.StringUtils
 import javax.servlet.ServletRequest
 import javax.servlet.ServletResponse
+import javax.servlet.http.HttpServletRequest
 
 class JWTFilter : BasicHttpAuthenticationFilter() {
     private val logger = logger<JWTFilter>()
 
     /**
-     * 拦截器，对 Shiro 拦截到的方法进行 Token 校验
+     * Fitler, for token validate
      */
     override fun onAccessDenied(request: ServletRequest?, response: ServletResponse?): Boolean {
+        // skip OPTIONS
+        if (skip(request)) return true
         logger.info("Start token authentication")
         val authorization = getAuthzHeader(request)
+        logger.info("Token: $authorization")
         return if (StringUtils.isEmpty(authorization)) {
             buildResponse(response, RestResponse.buildError(CommonExceptionType.MissingAuthorizationHeader))
             logger.info("Token authentication failed of empty authorization field in request")
@@ -39,7 +43,15 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
     }
 
     /**
-     * 构建校验失败响应
+     * Skip OPTIONS request
+     */
+    private fun skip(request: ServletRequest?): Boolean {
+        val req = request as HttpServletRequest
+        return req.method == "OPTIONS"
+    }
+
+    /**
+     * Build token validate failed response
      */
     private fun buildResponse(response: ServletResponse?, restResponse: RestResponse) {
         response?.let {

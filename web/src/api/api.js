@@ -26,3 +26,12 @@ export const postLogin = params => {
         }
     })
 }
+
+export const getTweets = params => {
+    return axios.get(`${host}/tweet`, {
+        params: params,
+        headers: {
+            Authorization: localStorage.token
+        }
+    })
+}
