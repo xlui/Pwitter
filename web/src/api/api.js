@@ -10,8 +10,17 @@ const contentType = 'application/json;charset=utf-8'
  * @returns {Promise<AxiosResponse<T>>} Axios Promise
  */
 export const postSignUp = params => {
-    let uri = `${host}/register`
-    return axios.post(uri, JSON.stringify(params), {
+    let url = `${host}/register`
+    return axios.post(url, JSON.stringify(params), {
+        headers: {
+            'Content-Type': contentType
+        }
+    })
+}
+
+export const postLogin = params => {
+    let url = `${host}/login`
+    return axios.post(url, JSON.stringify(params), {
         headers: {
             'Content-Type': contentType
         }

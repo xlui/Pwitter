@@ -80,7 +80,7 @@ export default Form.create()(function (props) {
     }
 
     return (
-        <Row type="flex" justify="center" align="middle" className="Form">
+        <Row type="flex" justify="center" align="middle" className="SignUp-Form">
             <Col span={5}>
                 <Card title="Join pwitter now!">
                     <Form labelCol={{span: 6}} wrapperCol={{span: 18}} labelAlign="left" onSubmit={handleSubmit}>
@@ -161,9 +161,9 @@ export default Form.create()(function (props) {
                             }
                         </Form.Item>
 
-                        <Row type="flex" justify="center" className="Buttons">
-                            <Button type="primary" className="SignUp" htmlType="submit">Sign up</Button>
-                            <Button className="GoBack" onClick={goBack}>Go back</Button>
+                        <Row type="flex" justify="center" className="SignUp-Buttons">
+                            <Button type="primary" className="SignUp-SignUp" htmlType="submit">Sign up</Button>
+                            <Button className="SignUp-GoBack" onClick={goBack}>Go back</Button>
                         </Row>
                     </Form>
                 </Card>
