@@ -26,8 +26,10 @@ export default function () {
             <Footer>
                 <hr/>
                 <p>
-                    Powered by Ant Design ♥
-                    <a href="https://github.com/xlui" target="_blank" rel="noopener noreferrer">xlui</a>
+                    Powered by Ant Design ♥ <a
+                    href="https://github.com/xlui"
+                    target="_blank"
+                    rel="noopener noreferrer">xlui</a>
                 </p>
             </Footer>
         </Layout>

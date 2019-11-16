@@ -43,6 +43,7 @@ export default Form.create()(function (props) {
                         <Form.Item label="Username">
                             {
                                 getFieldDecorator('username', {
+                                    initialValue: 'xlui',
                                     rules: [
                                         {
                                             required: true,
@@ -56,6 +57,7 @@ export default Form.create()(function (props) {
                         <Form.Item label="Password">
                             {
                                 getFieldDecorator('password', {
+                                    initialValue: 'pass',
                                     rules: [
                                         {
                                             required: true,
