@@ -26,6 +26,8 @@ class UserService @Autowired constructor(
 
     fun findFollowings(user: User) = userRepository.findFollowings(user)
 
+    fun findAll() = userRepository.findAll()
+
     /**
      * 判断是否可以通过 username 查询到用户
      */

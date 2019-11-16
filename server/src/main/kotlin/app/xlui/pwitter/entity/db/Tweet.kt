@@ -19,11 +19,12 @@ data class Tweet(
         val mediaType: TweetMediaType = TweetMediaType.None,
         val media: String = "",
 
+        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
         val createTime: LocalDateTime = LocalDateTime.now()
 ) {
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.AUTO)
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     var user: User = User()
 
     @OneToMany(mappedBy = "tweet")

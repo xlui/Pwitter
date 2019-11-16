@@ -17,5 +17,7 @@ class TweetService @Autowired constructor(
 
     fun deleteAll() = tweetRepository.deleteAll()
 
+    fun findAll() = tweetRepository.findAll()
+
     fun findByTweetId(tweetId: Long) = tweetRepository.findById(tweetId)
 }

@@ -1,6 +1,7 @@
 package app.xlui.pwitter.service
 
 import app.xlui.pwitter.entity.db.Comment
+import app.xlui.pwitter.entity.db.Tweet
 import app.xlui.pwitter.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -16,4 +17,6 @@ class CommentService @Autowired constructor(
     fun delete(comment: Comment) = commentRepository.delete(comment)
 
     fun deleteAll() = commentRepository.deleteAll()
+
+    fun findByTweet(tweet: Tweet) = commentRepository.findByTweet(tweet)
 }
