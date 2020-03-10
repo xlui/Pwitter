@@ -1,6 +1,6 @@
 package app.xlui.pwitter.task
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.exception.CommonException
@@ -102,7 +102,7 @@ class FakerTask @Autowired constructor(
             loginResp.data!! as String
         } else {
             logger.error("使用 $randomUser 登录失败！")
-            throw CommonException(CommonExceptionType.UsernameOrPasswordInvalid)
+            throw CommonException(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
         }
     }
 }

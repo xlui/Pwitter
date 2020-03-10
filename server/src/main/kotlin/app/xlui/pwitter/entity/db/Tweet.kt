@@ -1,6 +1,6 @@
 package app.xlui.pwitter.entity.db
 
-import app.xlui.pwitter.constant.TweetMediaType
+import app.xlui.pwitter.constant.TweetMediaTypeEnum
 import com.fasterxml.jackson.annotation.JsonProperty
 import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
@@ -16,7 +16,7 @@ data class Tweet(
         @field:NotBlank
         val content: String = "",
         @field:NotNull
-        val mediaType: TweetMediaType = TweetMediaType.None,
+        val mediaTypeEnum: TweetMediaTypeEnum = TweetMediaTypeEnum.None,
         val media: String = "",
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

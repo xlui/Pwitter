@@ -1,6 +1,6 @@
 package app.xlui.pwitter.exception
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.util.logger
 import org.springframework.http.HttpStatus
@@ -22,7 +22,7 @@ class GlobalExceptionController {
     ])
     fun handleBadRequest(e: Exception): RestResponse {
         logger.error("Bad request", e)
-        return RestResponse.buildError(CommonExceptionType.RequestParamInvalid)
+        return RestResponse.buildError(CommonExceptionTypeEnum.RequestParamInvalid)
     }
 
     @ResponseStatus(HttpStatus.OK)

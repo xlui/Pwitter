@@ -1,7 +1,7 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.annotation.CurrentUser
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.service.UserService
@@ -31,10 +31,10 @@ class UserController @Autowired constructor(
     fun register(@RequestBody @Valid param: User, errors: Errors): RestResponse {
         // check {@code @Valid} result
         if (errors.hasErrors()) return RestResponse.buildError(
-                CommonExceptionType.RequestParamInvalid,
+                CommonExceptionTypeEnum.RequestParamInvalid,
                 errors.allErrors.joinToString(separator = "; ") { it.defaultMessage!! }
         )
-        if (userService.exist(param.username)) return RestResponse.buildError(CommonExceptionType.UsernameAlreadyExist)
+        if (userService.exist(param.username)) return RestResponse.buildError(CommonExceptionTypeEnum.UsernameAlreadyExist)
 
         val salt = generateSalt()
         val user = User(
@@ -55,7 +55,7 @@ class UserController @Autowired constructor(
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
     fun login(@RequestBody param: User): RestResponse {
         if (StringUtils.isBlank(param.username) || StringUtils.isBlank(param.password)) {
-            return RestResponse.buildError(CommonExceptionType.UsernameOrPasswordInvalid)
+            return RestResponse.buildError(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
         }
 
         val user = userService.findByUsername(param.username)
@@ -65,7 +65,7 @@ class UserController @Autowired constructor(
                 return RestResponse.buildSuccess(JWTUtils.sign(it.username, it.password))
             }
         }
-        return RestResponse.buildError(CommonExceptionType.UsernameOrPasswordInvalid)
+        return RestResponse.buildError(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
     }
 
     @RequestMapping("/t")

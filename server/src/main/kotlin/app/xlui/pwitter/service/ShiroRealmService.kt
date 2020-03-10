@@ -1,6 +1,6 @@
 package app.xlui.pwitter.service
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.vo.JWTToken
 import app.xlui.pwitter.exception.CommonException
 import app.xlui.pwitter.util.JWTUtils
@@ -27,7 +27,7 @@ class ShiroRealmService @Autowired constructor(
      */
     override fun doGetAuthorizationInfo(p0: PrincipalCollection?): AuthorizationInfo {
         // permission checking
-        throw CommonException(CommonExceptionType.UnsupportedShiroAuthorization)
+        throw CommonException(CommonExceptionTypeEnum.UnsupportedShiroAuthorization)
     }
 
     /**

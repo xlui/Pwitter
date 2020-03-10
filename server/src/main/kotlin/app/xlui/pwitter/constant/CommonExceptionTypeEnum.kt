@@ -1,6 +1,6 @@
 package app.xlui.pwitter.constant
 
-enum class CommonExceptionType(
+enum class CommonExceptionTypeEnum(
         val code: Int,
         val msg: String
 ) {

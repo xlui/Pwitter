@@ -1,8 +1,8 @@
 package app.xlui.pwitter.web
 
 import app.xlui.pwitter.annotation.CurrentUser
-import app.xlui.pwitter.constant.CommonExceptionType
-import app.xlui.pwitter.constant.TweetMediaType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
+import app.xlui.pwitter.constant.TweetMediaTypeEnum
 import app.xlui.pwitter.entity.db.Comment
 import app.xlui.pwitter.entity.db.Tweet
 import app.xlui.pwitter.entity.db.User
@@ -18,9 +18,7 @@ import org.springframework.util.StringUtils
 import org.springframework.validation.Errors
 import org.springframework.web.bind.annotation.*
 import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 import javax.validation.Valid
-import kotlin.concurrent.fixedRateTimer
 
 @RestController
 class TweetController @Autowired constructor(
@@ -57,11 +55,11 @@ class TweetController @Autowired constructor(
      */
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.POST])
     fun createTweet(@CurrentUser user: User, @RequestBody @Valid param: Tweet, errors: Errors): RestResponse {
-        if (errors.hasErrors()) return RestResponse.buildError(CommonExceptionType.TweetParamInvalid)
-        if (param.mediaType != TweetMediaType.None && StringUtils.isEmpty(param.media)) {
-            return RestResponse.buildError(CommonExceptionType.TweetContentInvalid)
+        if (errors.hasErrors()) return RestResponse.buildError(CommonExceptionTypeEnum.TweetParamInvalid)
+        if (param.mediaTypeEnum != TweetMediaTypeEnum.None && StringUtils.isEmpty(param.media)) {
+            return RestResponse.buildError(CommonExceptionTypeEnum.TweetContentInvalid)
         }
-        val tweet = Tweet(content = param.content, mediaType = param.mediaType, media = param.media).apply { this.user = user }
+        val tweet = Tweet(content = param.content, mediaTypeEnum = param.mediaTypeEnum, media = param.media).apply { this.user = user }
         tweetService.save(tweet)
         return RestResponse.buildSuccess("Successfully create a tweet!")
     }
@@ -73,7 +71,7 @@ class TweetController @Autowired constructor(
     fun viewTweet(@PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = unpack(tweetService.findByTweetId(tweetId))
         tweet?.takeIf { !it.user.deleted }?.let { return RestResponse.buildSuccess(it) }
-        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
+        return RestResponse.buildError(CommonExceptionTypeEnum.TweetIdInvalid)
     }
 
     /**
@@ -82,8 +80,8 @@ class TweetController @Autowired constructor(
     @RequestMapping(value = ["/tweet/{tweetId}/comment"], method = [RequestMethod.GET])
     fun comments(@CurrentUser user: User, @PathVariable("tweetId") tweetId: Long): RestResponse {
         val tweet = unpack(tweetService.findByTweetId(tweetId))
-        tweet?.let { return RestResponse.buildSuccess(it.comments) }
-        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
+        tweet?.takeIf { !it.user.deleted }?.let { return RestResponse.buildSuccess(it.comments) }
+        return RestResponse.buildError(CommonExceptionTypeEnum.TweetIdInvalid)
     }
 
     /**
@@ -100,6 +98,6 @@ class TweetController @Autowired constructor(
             commentService.save(comment)
             return RestResponse.buildSuccess("Successfully post a comment!")
         }
-        return RestResponse.buildError(CommonExceptionType.TweetIdInvalid)
+        return RestResponse.buildError(CommonExceptionTypeEnum.TweetIdInvalid)
     }
 }

@@ -1,6 +1,6 @@
 package app.xlui.pwitter.entity.vo
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import org.apache.commons.lang3.StringUtils
 
 data class RestResponse(
@@ -17,6 +17,6 @@ data class RestResponse(
         /**
          * 构建错误响应
          */
-        fun buildError(type: CommonExceptionType, msg: String = "") = RestResponse(type.code, null, if (StringUtils.isBlank(msg)) type.msg else msg)
+        fun buildError(type: CommonExceptionTypeEnum, msg: String = "") = RestResponse(type.code, null, if (StringUtils.isBlank(msg)) type.msg else msg)
     }
 }

@@ -1,6 +1,6 @@
 package app.xlui.pwitter.filter
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.vo.JWTToken
 import app.xlui.pwitter.entity.vo.RestResponse
 import app.xlui.pwitter.util.logger
@@ -25,7 +25,7 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
         val authorization = getAuthzHeader(request)
         logger.info("Token: $authorization")
         return if (StringUtils.isEmpty(authorization)) {
-            buildResponse(response, RestResponse.buildError(CommonExceptionType.MissingAuthorizationHeader))
+            buildResponse(response, RestResponse.buildError(CommonExceptionTypeEnum.MissingAuthorizationHeader))
             logger.info("Token authentication failed of empty authorization field in request")
             false
         } else {
@@ -35,7 +35,7 @@ class JWTFilter : BasicHttpAuthenticationFilter() {
                 logger.info("Token authentication success")
                 true
             } catch (e: AuthenticationException) {
-                buildResponse(response, RestResponse.buildError(CommonExceptionType.InvalidTokenFormat))
+                buildResponse(response, RestResponse.buildError(CommonExceptionTypeEnum.InvalidTokenFormat))
                 logger.info("Token authentication failed of invalid token")
                 false
             }

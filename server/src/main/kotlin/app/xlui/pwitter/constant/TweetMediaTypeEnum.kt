@@ -1,6 +1,6 @@
 package app.xlui.pwitter.constant
 
-enum class TweetMediaType {
+enum class TweetMediaTypeEnum {
     None,
     Image,
     Video,

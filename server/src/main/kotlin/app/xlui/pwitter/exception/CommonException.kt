@@ -1,7 +1,7 @@
 package app.xlui.pwitter.exception
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 
 class CommonException(
-        val type: CommonExceptionType
+        val type: CommonExceptionTypeEnum
 ) : RuntimeException(type.msg)

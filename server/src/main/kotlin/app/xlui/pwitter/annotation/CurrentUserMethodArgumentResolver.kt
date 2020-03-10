@@ -1,6 +1,6 @@
 package app.xlui.pwitter.annotation
 
-import app.xlui.pwitter.constant.CommonExceptionType
+import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.exception.CommonException
 import app.xlui.pwitter.service.UserService
@@ -34,6 +34,6 @@ class CurrentUserMethodArgumentResolver @Autowired constructor(
     override fun resolveArgument(methodParameter: MethodParameter, p1: ModelAndViewContainer?, p2: NativeWebRequest, p3: WebDataBinderFactory?): Any? {
         val token = SecurityUtils.getSubject().principal as String
         return userService.findByUsername(JWTUtils.getUsername(token))
-                ?: throw CommonException(CommonExceptionType.InvalidTokenFormat)
+                ?: throw CommonException(CommonExceptionTypeEnum.InvalidTokenFormat)
     }
 }

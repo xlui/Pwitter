@@ -11,13 +11,13 @@ class TweetService @Autowired constructor(
 ) {
     fun save(tweet: Tweet) = tweetRepository.save(tweet)
 
-    fun save(tweets: Iterable<Tweet>) = tweetRepository.saveAll(tweets)
+    fun save(tweets: Iterable<Tweet>): List<Tweet> = tweetRepository.saveAll(tweets)
 
     fun delete(tweet: Tweet) = tweetRepository.delete(tweet)
 
     fun deleteAll() = tweetRepository.deleteAll()
 
-    fun findAll() = tweetRepository.findAll()
+    fun findAll(): List<Tweet> = tweetRepository.findAll()
 
     fun findByTweetId(tweetId: Long) = tweetRepository.findById(tweetId)
 }
