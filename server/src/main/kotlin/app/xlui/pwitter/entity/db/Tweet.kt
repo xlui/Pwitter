@@ -16,7 +16,7 @@ data class Tweet(
         @field:NotBlank
         val content: String = "",
         @field:NotNull
-        val mediaTypeEnum: TweetMediaTypeEnum = TweetMediaTypeEnum.None,
+        val mediaType: TweetMediaTypeEnum = TweetMediaTypeEnum.None,
         val media: String = "",
 
         @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)

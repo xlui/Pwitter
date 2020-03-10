@@ -56,10 +56,10 @@ class TweetController @Autowired constructor(
     @RequestMapping(value = ["/tweet"], method = [RequestMethod.POST])
     fun createTweet(@CurrentUser user: User, @RequestBody @Valid param: Tweet, errors: Errors): RestResponse {
         if (errors.hasErrors()) return RestResponse.buildError(CommonExceptionTypeEnum.TweetParamInvalid)
-        if (param.mediaTypeEnum != TweetMediaTypeEnum.None && StringUtils.isEmpty(param.media)) {
-            return RestResponse.buildError(CommonExceptionTypeEnum.TweetContentInvalid)
+        if (param.mediaType != TweetMediaTypeEnum.None && StringUtils.isEmpty(param.media)) {
+            return RestResponse.buildError(CommonExceptionTypeEnum.TweetMediaInvalid)
         }
-        val tweet = Tweet(content = param.content, mediaTypeEnum = param.mediaTypeEnum, media = param.media).apply { this.user = user }
+        val tweet = Tweet(content = param.content, mediaType = param.mediaType, media = param.media).apply { this.user = user }
         tweetService.save(tweet)
         return RestResponse.buildSuccess("Successfully create a tweet!")
     }
