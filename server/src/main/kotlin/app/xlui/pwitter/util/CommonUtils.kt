@@ -1,7 +1,9 @@
 package app.xlui.pwitter.util
 
 import app.xlui.pwitter.constant.CommonConstant
+import org.apache.shiro.crypto.hash.Md5Hash
 import org.slf4j.LoggerFactory
+import java.nio.charset.Charset
 import java.security.MessageDigest
 import java.util.*
 
@@ -15,7 +17,7 @@ fun <T> unpack(pack: Optional<T>): T? = if (pack.isEmpty) null else pack.get()
 /**
  * 生成唯一盐，算法 {@code UUID+saltMaterial+currentTimeMills}
  */
-fun generateSalt() = "${UUID.randomUUID().run { toString().replace("-", "") }}${CommonConstant.saltMaterial}${System.currentTimeMillis()}"
+fun generateSalt(): String = Md5Hash.toString(UUID.randomUUID().toString().run { replace("-", "") }.toByteArray(Charset.forName(CommonConstant.charset)))
 
 /**
  * 通过对加盐密码求 MD5 得到加密密码

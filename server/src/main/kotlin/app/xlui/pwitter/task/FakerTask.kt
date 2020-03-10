@@ -1,5 +1,6 @@
 package app.xlui.pwitter.task
 
+import app.xlui.pwitter.config.PwitterProperties
 import app.xlui.pwitter.constant.CommonExceptionTypeEnum
 import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.entity.vo.RestResponse
@@ -26,6 +27,7 @@ import java.util.*
 @Component
 class FakerTask @Autowired constructor(
         private val gson: Gson,
+        private val pwitterProperties: PwitterProperties,
         private val userService: UserService,
         private val tweetService: TweetService,
         private val commentService: CommentService,
@@ -39,10 +41,12 @@ class FakerTask @Autowired constructor(
 
     @Scheduled(fixedRate = 3_000)
     fun active() {
-        val random = Random()
-        when (random.nextInt(fakerCount)) {
-            0 -> postTweet()
-            1 -> commentTweet()
+        if (pwitterProperties.fake) {
+            val random = Random()
+            when (random.nextInt(fakerCount)) {
+                0 -> postTweet()
+                1 -> commentTweet()
+            }
         }
     }
 

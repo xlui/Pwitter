@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice
  * 全局异常处理
  */
 @RestControllerAdvice
-class GlobalExceptionController {
-    private val logger = logger<GlobalExceptionController>()
+class GlobalExceptionHandler {
+    private val logger = logger<GlobalExceptionHandler>()
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(value = [
