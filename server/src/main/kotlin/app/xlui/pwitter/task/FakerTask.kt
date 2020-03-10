@@ -39,7 +39,8 @@ class FakerTask @Autowired constructor(
 
     @Scheduled(fixedRate = 3_000)
     fun active() {
-        when (Random().nextInt(fakerCount)) {
+        val random = Random()
+        when (random.nextInt(fakerCount)) {
             0 -> postTweet()
             1 -> commentTweet()
         }
@@ -58,7 +59,6 @@ class FakerTask @Autowired constructor(
         val commentIds = commentService.findByTweet(tweet).map { it.id }
         val replyTo = mutableListOf(0L).apply { addAll(commentIds) }.shuffled().first()
         val comment = """{"replyTo":"$replyTo", "content":"${faker.lorem().sentence()}"}"""
-        logger.info("即将发送的comment：$comment")
         val commentResp = httpClient.send(
                 HttpRequest.newBuilder()
                         .uri(URI.create("http://localhost:8080/tweet/${tweet.id}/comment"))
@@ -68,7 +68,8 @@ class FakerTask @Autowired constructor(
                         .build(),
                 HttpResponse.BodyHandlers.ofString()
         )
-        logger.info("发送结果：${commentResp.body()}")
+        logger.info("发送的comment：$comment")
+        logger.info("发送的结果：${commentResp.body()}")
     }
 
     fun postTweet() {
@@ -84,19 +85,19 @@ class FakerTask @Autowired constructor(
                 HttpResponse.BodyHandlers.ofString()
         )
         val restResp = gson.fromJson<RestResponse>(tweetResp.body(), RestResponse::class.java)
-        logger.info("发送的 Tweet：${objectMapper.writeValueAsString(tweet)}")
+        logger.info("发送的Tweet：${objectMapper.writeValueAsString(tweet)}")
         logger.info("发送结果：$restResp")
     }
 
     fun login(): String {
-        val userPassword = mapOf(
+        val passwordMap = mapOf(
                 "xlui" to "pass",
                 "f1" to "p1",
                 "f2" to "p2",
                 "f3" to "p3"
         )
         val randomUser = userService.findAll().shuffled().first()
-        val loginResp = userController.login(User(username = randomUser.username, password = userPassword[randomUser.username]
+        val loginResp = userController.login(User(username = randomUser.username, password = passwordMap[randomUser.username]
                 ?: error("未取到 ${randomUser.username} 的密码！")))
         return if (loginResp.code == 0) {
             loginResp.data!! as String
