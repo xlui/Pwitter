@@ -9,10 +9,10 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
 class WebMvcConfiguration @Autowired constructor(
-        val currentUserResolver: CurrentUserMethodArgumentResolver
+    val currentUserResolver: CurrentUserMethodArgumentResolver,
 ) : WebMvcConfigurer {
     /**
-     * {@code @CurrentUser} annotation resolver
+     * annotation resolver
      */
     override fun addArgumentResolvers(resolvers: MutableList<HandlerMethodArgumentResolver>) {
         resolvers.add(currentUserResolver)
@@ -23,10 +23,10 @@ class WebMvcConfiguration @Autowired constructor(
      */
     override fun addCorsMappings(registry: CorsRegistry) {
         registry.addMapping("/**")
-                .allowedOrigins("*")
-                .allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
-                .allowedHeaders("Authorization", "Content-Type")
-                .maxAge(600)
-                .allowCredentials(false);
+            .allowedOrigins("*")
+            .allowedMethods("OPTIONS", "GET", "POST", "PUT", "PATCH", "DELETE")
+            .allowedHeaders("Authorization", "Content-Type")
+            .maxAge(600)
+            .allowCredentials(false);
     }
 }

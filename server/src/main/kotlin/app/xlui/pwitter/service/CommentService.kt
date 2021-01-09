@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class CommentService @Autowired constructor(
-        val commentRepository: CommentRepository
+    val commentRepository: CommentRepository
 ) {
     fun save(comment: Comment) = commentRepository.save(comment)
 
@@ -18,5 +18,5 @@ class CommentService @Autowired constructor(
 
     fun deleteAll() = commentRepository.deleteAll()
 
-    fun findByTweet(tweet: Tweet) = commentRepository.findByTweet(tweet)
+    fun findByTweet(tweet: Tweet): List<Comment> = commentRepository.findByTweetId(tweet.id)
 }

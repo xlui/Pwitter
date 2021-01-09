@@ -10,5 +10,5 @@ import org.springframework.stereotype.Component
 @ConfigurationProperties("pwitter")
 class PwitterProperties {
     var init: Boolean = false
-    val fake: Boolean = false
+    var fake: Boolean = false
 }

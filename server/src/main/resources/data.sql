@@ -1,67 +1,94 @@
-CREATE TABLE t_user
+drop table if exists hibernate_sequence;
+drop table if exists operation_log;
+drop table if exists pwitter_comment;
+drop table if exists pwitter_follow;
+drop table if exists pwitter_like;
+drop table if exists pwitter_tweet;
+drop table if exists pwitter_user;
+
+create table hibernate_sequence
 (
-    id          bigint       NOT NULL PRIMARY KEY,
-    email       VARCHAR(255) NULL,
-    username    VARCHAR(32)  NOT NULL,
-    nickname    VARCHAR(32)  NULL,
-    password    VARCHAR(32)  NOT NULL,
-    salt        VARCHAR(255) NOT NULL,
-    deleted     BIT          NOT NULL,
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    update_time DATETIME DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    UNIQUE KEY `t_user_username_index` (`username`)
-) ENGINE = InnoDB
-  CHARSET = utf8mb4;
+    next_val bigint
+) engine = InnoDB;
 
+insert into hibernate_sequence
+values (1);
 
-CREATE TABLE t_tweet
+create table pwitter_user
 (
-    id          BIGINT       NOT NULL PRIMARY KEY,
-    user_id     BIGINT       NOT NULL,
-    content     VARCHAR(255) NULL,
-    -- 此处媒体类型应设置默认值，需要考虑枚举与数据库值的对应
-    media_type  INT          NULL,
-    media       VARCHAR(255) NULL,
-    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
-    KEY `t_tweet_user_id_index` (`user_id`)
-) ENGINE = InnoDB
-  CHARSET = utf8mb4;
+    id          bigint not null,
+    username    varchar(32),
+    password    varchar(32),
+    salt        varchar(255),
+    email       varchar(255),
+    nickname    varchar(32),
+    deleted     bit    not null,
+    create_time datetime default current_timestamp,
+    update_time datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
 
+alter table pwitter_user
+    add constraint UK_k6goijaxa267eks9g95jhmna1 unique (username);
 
-CREATE TABLE t_comment
+create table pwitter_follow
 (
-    id          BIGINT       NOT NULL PRIMARY KEY,
-    user_id     BIGINT       NOT NULL,
-    tweet_id    BIGINT       NOT NULL,
-    content     VARCHAR(255) NOT NULL,
-    reply_to    BIGINT       NOT NULL,
-    deleted     BIT          NOT NULL,
-    create_time DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    KEY `t_comment_user_id_index` (`user_id`),
-    KEY `t_comment_tweet_id_index` (`tweet_id`)
-) ENGINE = InnoDB
-  CHARSET = utf8mb4;
+    id                bigint not null,
+    following_user_id bigint not null,
+    follower_user_id  bigint not null,
+    deleted           bit    not null,
+    create_time       datetime default current_timestamp,
+    update_time       datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
 
-
-CREATE TABLE t_follow
+create table pwitter_tweet
 (
-    id          BIGINT   NOT NULL PRIMARY KEY,
-    user_id     BIGINT   NOT NULL,
-    follower_id BIGINT   NOT NULL,
-    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    KEY `t_follow_user_id_index` (`user_id`),
-    KEY `t_follow_follower_id_index` (`follower_id`)
-) ENGINE = InnoDB
-  CHARSET = utf8mb4;
+    id          bigint not null,
+    user_id     bigint not null,
+    content     varchar(255),
+    media_type  integer,
+    media       varchar(255),
+    deleted     bit    not null,
+    create_time datetime default current_timestamp,
+    update_time datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
 
-
-CREATE TABLE t_like
+create table pwitter_like
 (
-    id          BIGINT   NOT NULL PRIMARY KEY,
-    user_id     BIGINT   NOT NULL,
-    tweet_id    BIGINT   NOT NULL,
-    create_time DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    KEY `t_like_user_id_index` (`user_id`),
-    KEY `t_like_tweet_id_index` (`tweet_id`)
-) ENGINE = InnoDB
-  CHARSET = utf8mb4;
+    id          bigint not null,
+    user_id     bigint not null,
+    tweet_id    bigint not null,
+    deleted     bit    not null,
+    create_time datetime default current_timestamp,
+    update_time datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
+
+create table pwitter_comment
+(
+    id               bigint not null,
+    user_id          bigint not null,
+    tweet_id         bigint not null,
+    reply_comment_id bigint not null,
+    content          varchar(255),
+    deleted          bit    not null,
+    create_time      datetime default current_timestamp,
+    update_time      datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;
+
+create table operation_log
+(
+    id             bigint  not null,
+    operation_type integer not null,
+    object_id      bigint  not null,
+    before_value   varchar(255),
+    after_value    varchar(255),
+    operator       bigint  not null,
+    comment        varchar(255),
+    create_time    datetime default current_timestamp,
+    update_time    datetime default current_timestamp on update current_timestamp,
+    primary key (id)
+) engine = InnoDB;

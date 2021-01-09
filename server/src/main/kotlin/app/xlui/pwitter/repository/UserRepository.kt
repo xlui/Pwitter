@@ -10,8 +10,9 @@ interface UserRepository : JpaRepository<User, Long> {
 
     fun findByUsernameAndPassword(username: String, password: String): User?
 
-    @Query("SELECT u FROM Follow AS f LEFT JOIN User AS u ON f.user.id = u.id " +
-            "WHERE f.follower.id = :#{#user.id} AND u.deleted = false"
+    @Query(
+        "SELECT u FROM Follow AS f LEFT JOIN User AS u ON f.followingUserId = u.id " +
+                "WHERE f.followerUserId = :#{#user.id} AND u.deleted = false"
     )
     fun findFollowings(@Param("user") user: User): List<User>
 }

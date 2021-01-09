@@ -2,7 +2,7 @@ package app.xlui.pwitter.util
 
 import app.xlui.pwitter.config.Const
 import app.xlui.pwitter.constant.CommonExceptionTypeEnum
-import app.xlui.pwitter.exception.CommonException
+import app.xlui.pwitter.exception.PwitterException
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import java.util.*
@@ -19,11 +19,11 @@ object JWTUtils {
             val expire = Date(System.currentTimeMillis() + Const.tokenExpireTime)
             val algorithm = Algorithm.HMAC256(secret)
             return JWT.create()
-                    .withClaim(claim, username)
-                    .withExpiresAt(expire)
-                    .sign(algorithm)
+                .withClaim(claim, username)
+                .withExpiresAt(expire)
+                .sign(algorithm)
         } catch (e: Exception) {
-            throw CommonException(CommonExceptionTypeEnum.FailedToGenerateJWTToken)
+            throw PwitterException(CommonExceptionTypeEnum.FailedToGenerateJWTToken)
         }
     }
 
@@ -34,8 +34,8 @@ object JWTUtils {
         return try {
             val algorithm = Algorithm.HMAC256(secret)
             val verifier = JWT.require(algorithm)
-                    .withClaim(claim, username)
-                    .build()
+                .withClaim(claim, username)
+                .build()
             verifier.verify(token)
             true
         } catch (e: Exception) {

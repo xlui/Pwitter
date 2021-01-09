@@ -40,10 +40,10 @@ class ShiroConfiguration {
         bean.filters = filterMap
 
         val filterRuleMap = mapOf(
-                "/register" to "anon",
-                "/login" to "anon",
-                "/forget" to "anon",
-                "/**" to "jwt"
+            "/register" to "anon",
+            "/login" to "anon",
+            "/forget" to "anon",
+            "/**" to "jwt"
         )
         bean.filterChainDefinitionMap = filterRuleMap
 

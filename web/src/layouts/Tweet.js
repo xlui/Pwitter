@@ -2,6 +2,7 @@ import React from "react";
 
 export default function (props) {
     const tweet = props.tweet
+    console.log(tweet)
     return (
         <div>
             id: {tweet.id}

@@ -1,13 +1,13 @@
 package app.xlui.pwitter.constant
 
 enum class TweetMediaTypeEnum(
-        val code: Int,
-        val msg: String
+    val code: Int,
+    val msg: String
 ) {
-    None(0, "默认"),
-    Image(1, "图片"),
-    Video(2, "视频"),
-    ReTweet(3, "转发");
+    None(0, "Default, Text only"),
+    Image(1, "Image"),
+    Video(2, "Video"),
+    ReTweet(3, "Retweet");
 
     companion object {
         fun of(code: Int): TweetMediaTypeEnum {

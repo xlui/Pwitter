@@ -1,3 +1,5 @@
+@file:Suppress("LocalVariableName", "SpellCheckingInspection")
+
 package app.xlui.pwitter
 
 import app.xlui.pwitter.config.PwitterProperties
@@ -19,15 +21,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.Date
+import java.util.*
 
+@Suppress("DuplicatedCode")
 @SpringBootApplication
 class PwitterApplication @Autowired constructor(
-        val userService: UserService,
-        val followService: FollowService,
-        val tweetService: TweetService,
-        val commentService: CommentService,
-        val pwitterProperties: PwitterProperties
+    val userService: UserService,
+    val followService: FollowService,
+    val tweetService: TweetService,
+    val commentService: CommentService,
+    val pwitterProperties: PwitterProperties
 ) : CommandLineRunner {
     private val logger = logger<PwitterApplication>()
 
@@ -43,40 +46,140 @@ class PwitterApplication @Autowired constructor(
      * 初始化测试数据
      */
     private fun init() {
+        userService.deleteAll()
+        commentService.deleteAll()
+        tweetService.deleteAll()
+        followService.deleteAll()
+
         val faker = Faker()
 
         val salt = generateSalt()
-        val mainUser = User(username = "xlui", password = generateEncryptedPassword("pass", salt), salt = salt, email = "test@example.com")
-        val follower1 = User(username = "f1", password = generateEncryptedPassword("p1", salt), salt = salt, email = "test@example.com")
-        val follower2 = User(username = "f2", password = generateEncryptedPassword("p2", salt), salt = salt, deleted = true, email = "test@example.com")
-        val follower3 = User(username = "f3", password = generateEncryptedPassword("p3", salt), salt = salt, email = "test@example.com")
+        val u = User(username = "123asd", password = "dafasfafsadfdaasdsa", salt = salt, email = "asdas@mei.com")
+        userService.save(u)
+        val mainUser = userService.save(
+            User(
+                username = "xlui",
+                password = generateEncryptedPassword("pass", salt),
+                salt = salt,
+                email = "test@example.com"
+            )
+        )
+        val follower1 = userService.save(
+            User(
+                username = "follower1",
+                password = generateEncryptedPassword("p1", salt),
+                salt = salt,
+                email = "test@example.com"
+            )
+        )
+        val follower2 = userService.save(
+            User(
+                username = "follower2",
+                password = generateEncryptedPassword("p2", salt),
+                salt = salt,
+                deleted = true,
+                email = "test@example.com"
+            )
+        )
+        val follower3 = userService.save(
+            User(
+                username = "follower3",
+                password = generateEncryptedPassword("p3", salt),
+                salt = salt,
+                email = "test@example.com"
+            )
+        )
 
-        val follow1 = Follow(user = follower1, follower = mainUser)
-        val follow2 = Follow(user = follower2, follower = mainUser)
-        val follow3 = Follow(user = follower3, follower = mainUser)
+        val follow1 = Follow(followingUserId = mainUser.id, followerUserId = follower1.id)
+        val follow2 = Follow(followingUserId = mainUser.id, followerUserId = follower2.id)
+        val follow3 = Follow(followingUserId = mainUser.id, followerUserId = follower3.id)
 
         val from = Date.from(LocalDateTime.now().atZone(ZoneId.systemDefault()).toInstant())
         val to = Date.from(LocalDateTime.now().plusDays(30).atZone(ZoneId.systemDefault()).toInstant())
-        val tweet1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = mainUser }
-        val tweet2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = mainUser }
-        val tweet1_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
-        val tweet1_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
-        val tweet1_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower1 }
-        val tweet2_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower2 }
-        val tweet2_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower2 }
-        val tweet3_1 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
-        val tweet3_2 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
-        val tweet3_3 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
-        val tweet3_4 = Tweet(content = faker.lorem().sentence(), createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())).apply { user = follower3 }
+        val tweetm_1 = tweetService.save(
+            Tweet(
+                userId = mainUser.id,
+                content = faker.lorem().sentence(),
+                createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+            )
+        )
+        val tweetm_2 = Tweet(
+            userId = mainUser.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet1_1 = Tweet(
+            userId = follow1.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet1_2 = Tweet(
+            userId = follow1.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet1_3 = Tweet(
+            userId = follow1.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet2_1 = Tweet(
+            userId = follow2.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet2_2 = Tweet(
+            userId = follow2.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet3_1 = Tweet(
+            userId = follow3.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet3_2 = Tweet(
+            userId = follow3.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet3_3 = Tweet(
+            userId = follow3.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
+        val tweet3_4 = Tweet(
+            userId = follow3.id,
+            content = faker.lorem().sentence(),
+            createTime = LocalDateTime.ofInstant(faker.date().between(from, to).toInstant(), ZoneId.systemDefault())
+        )
 
-        val comment1 = Comment(content = faker.lorem().sentence()).apply { user = follower1; tweet = tweet1 }
-        val comment2 = Comment(content = faker.lorem().sentence()).apply { user = follower2; tweet = tweet1 }
-        val comment3 = Comment(content = faker.lorem().sentence(), replyTo = 2).apply { user = follower3; tweet = tweet1 }
+        val comment1 = Comment(userId = follow1.id, tweetId = tweetm_1.id, content = faker.lorem().sentence())
+        val comment2 =
+            commentService.save(Comment(userId = follow2.id, tweetId = tweetm_2.id, content = faker.lorem().sentence()))
+        val comment3 = Comment(
+            userId = follow3.id,
+            tweetId = tweetm_1.id,
+            replyCommentId = comment2.id,
+            content = faker.lorem().sentence()
+        )
 
-        userService.save(listOf(mainUser, follower1, follower2, follower3))
         followService.save(listOf(follow1, follow2, follow3))
-        tweetService.save(listOf(tweet1, tweet2, tweet1_1, tweet1_2, tweet1_3, tweet2_1, tweet2_2, tweet3_1, tweet3_2, tweet3_3, tweet3_4))
-        commentService.save(listOf(comment1, comment2, comment3))
+        tweetService.save(
+            listOf(
+                tweetm_2,
+                tweet1_1,
+                tweet1_2,
+                tweet1_3,
+                tweet2_1,
+                tweet2_2,
+                tweet3_1,
+                tweet3_2,
+                tweet3_3,
+                tweet3_4
+            )
+        )
+        commentService.save(listOf(comment1, comment3))
     }
 }
 

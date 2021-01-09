@@ -7,9 +7,11 @@ import org.springframework.stereotype.Service
 
 @Service
 class FollowService @Autowired constructor(
-        val followRepository: FollowRepository
+    val followRepository: FollowRepository
 ) {
     fun save(follow: Follow) = followRepository.save(follow)
 
     fun save(follows: Iterable<Follow>) = followRepository.saveAll(follows)
+
+    fun deleteAll() = followRepository.deleteAll()
 }

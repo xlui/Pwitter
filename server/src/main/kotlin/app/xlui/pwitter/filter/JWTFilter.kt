@@ -1,8 +1,8 @@
 package app.xlui.pwitter.filter
 
 import app.xlui.pwitter.constant.CommonExceptionTypeEnum
-import app.xlui.pwitter.entity.vo.JWTToken
-import app.xlui.pwitter.entity.vo.RestResponse
+import app.xlui.pwitter.entity.common.JWTToken
+import app.xlui.pwitter.entity.common.RestResponse
 import app.xlui.pwitter.util.logger
 import com.fasterxml.jackson.databind.ObjectMapper
 import org.apache.shiro.authc.AuthenticationException

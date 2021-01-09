@@ -1,33 +1,32 @@
 package app.xlui.pwitter.entity.db
 
 import app.xlui.pwitter.constant.TweetMediaTypeEnum
-import com.fasterxml.jackson.annotation.JsonProperty
+import org.hibernate.annotations.CreationTimestamp
+import org.hibernate.annotations.UpdateTimestamp
 import org.jetbrains.annotations.NotNull
 import java.time.LocalDateTime
-import javax.persistence.*
+import javax.persistence.Entity
+import javax.persistence.GeneratedValue
+import javax.persistence.Id
+import javax.persistence.Table
 import javax.validation.constraints.NotBlank
 
 @Entity
-@Table(name = "t_tweet")
+@Table(name = "pwitter_tweet")
 data class Tweet(
-        @Id
-        @GeneratedValue
-        val id: Long = 0,
-        @field:NotBlank
-        val content: String = "",
-        @field:NotNull
-        val mediaType: TweetMediaTypeEnum = TweetMediaTypeEnum.None,
-        val media: String = "",
+    @Id
+    @GeneratedValue
+    val id: Long = 0,
+    val userId: Long = 0,
+    @field:NotBlank(message = "Tweet content should not be blank!")
+    val content: String = "",
+    @field:NotNull
+    val mediaType: TweetMediaTypeEnum = TweetMediaTypeEnum.None,
+    val media: String = "",
+    val deleted: Boolean = false,
 
-        @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-        val createTime: LocalDateTime = LocalDateTime.now()
-) {
-    @ManyToOne
-    @JoinColumn(name = "user_id")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    var user: User = User()
-
-    @OneToMany(mappedBy = "tweet")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    val comments: List<Comment> = listOf()
-}
+    @CreationTimestamp
+    val createTime: LocalDateTime = LocalDateTime.now(),
+    @UpdateTimestamp
+    val updateTime: LocalDateTime = LocalDateTime.now()
+)

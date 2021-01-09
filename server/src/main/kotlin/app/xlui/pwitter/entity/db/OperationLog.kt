@@ -9,17 +9,19 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "pwitter_follow")
-data class Follow(
+@Table(name = "operation_log")
+data class OperationLog(
     @Id
     @GeneratedValue
-    val id: Long = 0,
-    val followingUserId: Long = 0,
-    val followerUserId: Long = 0,
-    val deleted: Boolean = false,
-
+    val id: Long,
+    val operationType: Int,
+    val objectId: Long,
+    val beforeValue: String,
+    val afterValue: String,
+    val operator: Long,
+    val comment: String,
     @CreationTimestamp
-    val createTime: LocalDateTime = LocalDateTime.now(),
+    val createTime: LocalDateTime,
     @UpdateTimestamp
-    val updateTime: LocalDateTime = LocalDateTime.now()
+    val updateTime: LocalDateTime
 )
