@@ -9,6 +9,7 @@ enum class CommonExceptionTypeEnum(
     MissingAuthorizationHeader(10001, "Request header must contains authorization field"),
     UsernameOrPasswordInvalid(10002, "Username or password is invalid"),
     EmailFormatInvalid(10003, "Email format is invalid"),
+    InnerLoginFailed(10004, "Inner login failed"),
 
     // 11 - Token related
     InvalidTokenFormat(11000, "Invalid token format"),

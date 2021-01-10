@@ -71,7 +71,7 @@ class FakerTask @Autowired constructor(
             HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/tweet/${tweet.id}/comment"))
                 .header(HttpHeaders.AUTHORIZATION, token)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .POST(HttpRequest.BodyPublishers.ofString(comment))
                 .build(),
             HttpResponse.BodyHandlers.ofString()
@@ -87,7 +87,7 @@ class FakerTask @Autowired constructor(
             HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/tweet"))
                 .header(HttpHeaders.AUTHORIZATION, token)
-                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_UTF8_VALUE)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .POST(HttpRequest.BodyPublishers.ofString(tweet))
                 .build(),
             HttpResponse.BodyHandlers.ofString()
@@ -106,16 +106,16 @@ class FakerTask @Autowired constructor(
         )
         val randomUser = userService.findAll().filter { !it.deleted }.shuffled().first()
         val loginResp = userController.login(
-            "", UserVO(
-                username = randomUser.username, password = passwordMap[randomUser.username]
-                    ?: error("未取到 ${randomUser.username} 的密码！")
-            ), ""
+            UserVO(
+                username = randomUser.username,
+                password = passwordMap[randomUser.username] ?: error("未取到 ${randomUser.username} 的密码！")
+            )
         )
         return if (loginResp.code == 0) {
             loginResp.data!! as String
         } else {
             logger.error("使用 $randomUser 登录失败！")
-            throw PwitterException(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
+            throw PwitterException(CommonExceptionTypeEnum.InnerLoginFailed)
         }
     }
 }

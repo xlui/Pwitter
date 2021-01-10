@@ -6,6 +6,7 @@ import app.xlui.pwitter.repository.TweetRepository
 import app.xlui.pwitter.util.unpack
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class TweetService @Autowired constructor(
@@ -28,5 +29,6 @@ class TweetService @Autowired constructor(
         ?.takeIf { !it.deleted }
         ?.takeIf { userService.enabled(it.userId) }
 
-    fun findByUsers(users: List<User>): List<Tweet> = tweetRepository.findByUserIdIn(users.map { it.id })
+    fun findByUsers(users: List<User>, from: LocalDateTime, to: LocalDateTime): List<Tweet> =
+        tweetRepository.findByUserIdInAndCreateTimeBetweenOrderByCreateTimeDesc(users.map { it.id }, from, to)
 }

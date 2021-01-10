@@ -44,14 +44,11 @@ class TweetController @Autowired constructor(
         /**
          * 考虑根据关注者点赞、评论、转发形成一个公式计算出关注着点赞或转发的最有价值的几条 tweet 插入用户的 timeline
          */
-        val tweetFrom = from ?: LocalDate.now().minusDays(7)
-        val tweetTo = to ?: LocalDate.now()
+        val tweetFrom = from?.atStartOfDay() ?: LocalDate.now().minusDays(7).atStartOfDay()
+        val tweetTo = to?.atStartOfDay() ?: LocalDate.now().atStartOfDay()
         val followings = userService.findFollowings(user)
         val timelineUsers = mutableListOf(user).apply { addAll(followings) }
-        val tweets = tweetService.findByUsers(timelineUsers)
-            .filter { it.createTime.toLocalDate() in tweetFrom..tweetTo }
-            .sortedByDescending { it.createTime }
-        return RestResponse.buildSuccess(tweets)
+        return RestResponse.buildSuccess(tweetService.findByUsers(timelineUsers, tweetFrom, tweetTo))
     }
 
     /**

@@ -25,6 +25,7 @@ class ValidateVOAspect {
                 if (it is ValidateVO && arg is ValidatePwitterVO) {
                     try {
                         arg.validate()
+                        logger.info("[ValidateVOAspect] validate parameter passed, arg:$arg")
                     } catch (pe: PwitterException) {
                         logger.info("[ValidateVOAspect] validate parameter failed, arg:$arg", pe)
                         return RestResponse.buildError(pe)

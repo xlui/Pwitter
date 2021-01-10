@@ -5,6 +5,7 @@ import app.xlui.pwitter.exception.PwitterException
 import org.apache.commons.validator.routines.EmailValidator
 
 data class UserVO constructor(
+    val id: Long = 0,
     val username: String,
     val password: String,
     val email: String = "",
@@ -14,7 +15,10 @@ data class UserVO constructor(
         username.takeIf { it.isNotBlank() } ?: throw PwitterException(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
         password.takeIf { it.isNotBlank() } ?: throw PwitterException(CommonExceptionTypeEnum.UsernameOrPasswordInvalid)
         email.takeIf { it.isNotBlank() }
-            .takeIf { EmailValidator.getInstance().isValid(it) }
-            ?: throw PwitterException(CommonExceptionTypeEnum.EmailFormatInvalid)
+            ?.takeIf { e ->
+                EmailValidator.getInstance().takeIf { it.isValid(e) }
+                    ?.run { return@run true }
+                    ?: throw PwitterException()
+            }
     }
 }

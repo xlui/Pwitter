@@ -45,7 +45,7 @@ class UserController @Autowired constructor(
      * Login
      */
     @RequestMapping(value = ["/login"], method = [RequestMethod.POST])
-    fun login(aaa: String, @RequestBody @ValidateVO param: UserVO, ccc: String): RestResponse {
+    fun login(@RequestBody @ValidateVO param: UserVO): RestResponse {
         userService.findByUsername(param.username)?.let {
             if (it.password == generateEncryptedPassword(param.password, it.salt)) {
                 return RestResponse.buildSuccess(JWTUtils.sign(it.username, it.password))
