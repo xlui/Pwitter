@@ -1,8 +1,8 @@
 package app.xlui.pwitter.aspect
 
 import app.xlui.pwitter.annotation.ValidateVO
+import app.xlui.pwitter.entity.ValidatePwitterVO
 import app.xlui.pwitter.entity.common.RestResponse
-import app.xlui.pwitter.entity.vo.ValidatePwitterVO
 import app.xlui.pwitter.exception.PwitterException
 import app.xlui.pwitter.util.logger
 import org.aspectj.lang.ProceedingJoinPoint

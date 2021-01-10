@@ -22,7 +22,7 @@ import java.net.URI
 import java.net.http.HttpClient
 import java.net.http.HttpRequest
 import java.net.http.HttpResponse
-import java.util.*
+import java.util.Random
 
 @Component
 class FakerTask @Autowired constructor(
@@ -66,7 +66,8 @@ class FakerTask @Autowired constructor(
         val tweet = tweetService.findAll().shuffled().first()
         val commentIds = commentService.findByTweet(tweet).map { it.id }
         val replyTo = mutableListOf(0L).apply { addAll(commentIds) }.shuffled().first()
-        val comment = """{"replyTo":"$replyTo", "content":"${faker.lorem().sentence()}"}"""
+        val comment = if (replyTo != 0L) """{"replyTo":"$replyTo", "content":"${faker.lorem().sentence()}"}"""
+        else """{"content":"${faker.lorem().sentence()}"}"""
         val commentResp = httpClient.send(
             HttpRequest.newBuilder()
                 .uri(URI.create("http://localhost:8080/tweet/${tweet.id}/comment"))

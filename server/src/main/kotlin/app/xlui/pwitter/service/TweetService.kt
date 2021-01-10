@@ -1,10 +1,11 @@
 package app.xlui.pwitter.service
 
 import app.xlui.pwitter.entity.db.Tweet
-import app.xlui.pwitter.entity.db.User
 import app.xlui.pwitter.repository.TweetRepository
 import app.xlui.pwitter.util.unpack
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageRequest
 import org.springframework.stereotype.Service
 import java.time.LocalDateTime
 
@@ -29,6 +30,11 @@ class TweetService @Autowired constructor(
         ?.takeIf { !it.deleted }
         ?.takeIf { userService.enabled(it.userId) }
 
-    fun findByUsers(users: List<User>, from: LocalDateTime, to: LocalDateTime): List<Tweet> =
-        tweetRepository.findByUserIdInAndCreateTimeBetweenOrderByCreateTimeDesc(users.map { it.id }, from, to)
+    fun findByUsers(userIdList: List<Long>, from: LocalDateTime, to: LocalDateTime, pageNo: Int, pageSize: Int): Page<Tweet> =
+        tweetRepository.findByUserIdInAndCreateTimeBetweenOrderByCreateTimeDesc(
+            userIdList,
+            from,
+            to,
+            PageRequest.of(pageNo - 1, pageSize)
+        )
 }

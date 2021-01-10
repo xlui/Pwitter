@@ -21,6 +21,11 @@ class UserService @Autowired constructor(
 
     fun deleteAll() = userRepository.deleteAll()
 
+    fun findByIdList(idList: List<Long>): List<User> = userRepository.findByIdIn(idList)
+
+    fun findMapByIdList(idList: List<Long>): Map<Long, User> = userRepository.findByIdIn(idList)
+        .associateBy({ it.id }, { it })
+
     fun findByUsername(username: String, deleted: Boolean = false): User? = userRepository.findByUsername(username)
         ?.takeIf { deleted == it.deleted }
 
@@ -28,9 +33,9 @@ class UserService @Autowired constructor(
         userRepository.findByUsernameAndPassword(username, password)
             ?.takeIf { deleted == it.deleted }
 
-    fun findFollowings(user: User) = userRepository.findFollowings(user)
+    fun findFollowings(userId: Long) = userRepository.findFollowings(userId)
 
-    fun findAll() = userRepository.findAll()
+    fun findAll(): List<User> = userRepository.findAll()
 
     /**
      * 判断是否可以通过 username 查询到用户
@@ -40,6 +45,6 @@ class UserService @Autowired constructor(
     fun exist(user: User): Boolean = exist(user.username)
 
     fun enabled(userId: Long): Boolean = unpack(userRepository.findById(userId))
-        ?.let { return@let it.deleted }
-        ?: kotlin.run { false }
+        ?.let { return !it.deleted }
+        ?: false
 }

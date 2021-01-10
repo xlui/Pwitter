@@ -1,7 +1,7 @@
 package app.xlui.pwitter.annotation
 
 import app.xlui.pwitter.constant.CommonExceptionTypeEnum
-import app.xlui.pwitter.entity.db.User
+import app.xlui.pwitter.converter.PwitterConverter
 import app.xlui.pwitter.exception.PwitterException
 import app.xlui.pwitter.service.UserService
 import app.xlui.pwitter.util.JWTUtils
@@ -25,9 +25,7 @@ class CurrentUserMethodArgumentResolver @Autowired constructor(
      * 判断当前处理的方法是否符合注入条件
      */
     override fun supportsParameter(methodParameter: MethodParameter): Boolean {
-        return methodParameter.parameterType.isAssignableFrom(User::class.java) && methodParameter.hasParameterAnnotation(
-            CurrentUser::class.java
-        )
+        return methodParameter.hasParameterAnnotation(CurrentUser::class.java)
     }
 
     /**
@@ -40,7 +38,7 @@ class CurrentUserMethodArgumentResolver @Autowired constructor(
         p3: WebDataBinderFactory?
     ): Any? {
         val token = SecurityUtils.getSubject().principal as String
-        return userService.findByUsername(JWTUtils.getUsername(token))
+        return PwitterConverter.convertNull(userService.findByUsername(JWTUtils.getUsername(token)))
             ?: throw PwitterException(CommonExceptionTypeEnum.InvalidTokenFormat)
     }
 }

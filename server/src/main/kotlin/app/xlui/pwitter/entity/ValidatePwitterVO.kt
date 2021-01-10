@@ -1,4 +1,4 @@
-package app.xlui.pwitter.entity.vo
+package app.xlui.pwitter.entity
 
 /**
  * Common validate interface for VO
